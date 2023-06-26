@@ -1,0 +1,119 @@
+version: '3'
+services:
+    filebrowser:
+        image: filebrowser/filebrowser
+        environment:
+            - PUID=1000
+            - PGID=1000
+        volumes:
+            - ./medias/complete:/srv
+            - ./filebrowser/database.db:/database.db
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.routers.filebrowser.rule=Host(`filebrowser.barlito.fr`)
+                - traefik.http.routers.filebrowser.entrypoints=http
+                - traefik.http.routers.filebrowser.middlewares=tls-redirectscheme
+
+                - traefik.http.services.filebrowser.loadbalancer.server.port=80
+
+                - traefik.http.routers.filebrowser-secure.rule=Host(`filebrowser.barlito.fr`)
+                - traefik.http.routers.filebrowser-secure.tls=true
+                - traefik.http.routers.filebrowser-secure.entrypoints=https
+                - traefik.http.routers.filebrowser-secure.tls.certresolver=letsencrypt
+        networks:
+            - traefik_traefik_proxy
+
+    transmission:
+        image: lscr.io/linuxserver/transmission:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+            - TRANSMISSION_WEB_HOME=/config/transmission-web-control/src/
+        volumes:
+            - ./transmission/config:/config
+            - ./transmission/watch:/watch
+            - ./medias:/downloads
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.middlewares.transmission-auth.basicauth.users=root:$$2y$$05$$Q6qkpsZUMxVSp7ROUXS09eafCHmFVdzI0e.hPRY12V2jRAhCNtmuO
+
+                - traefik.http.routers.transmission.rule=Host(`transmission.barlito.fr`)
+                - traefik.http.routers.transmission.entrypoints=http
+                - traefik.http.routers.transmission.middlewares=tls-redirectscheme
+
+                - traefik.http.services.transmission.loadbalancer.server.port=9091
+
+                - traefik.http.routers.transmission-secure.rule=Host(`transmission.barlito.fr`)
+                - traefik.http.routers.transmission-secure.tls=true
+                - traefik.http.routers.transmission-secure.entrypoints=https
+                - traefik.http.routers.transmission-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.transmission-secure.middlewares=transmission-auth
+        networks:
+            - traefik_traefik_proxy
+
+    plex:
+        image: lscr.io/linuxserver/plex:latest
+        hostname: KS-6 Plex New
+        ports:
+            - "32400:32400/tcp"
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+            - VERSION=docker
+        volumes:
+            - ./plex/config:/config
+            - ./medias:/data
+        networks:
+            - traefik_traefik_proxy
+
+    ubooquity:
+        image: lscr.io/linuxserver/ubooquity:latest
+        container_name: ubooquity
+        environment:
+            - PUID=1000
+            - PGID=1000
+        volumes:
+            - ./ubooquity/config:/config
+            - ./medias/complete/books:/books
+            - ./medias/complete/comics:/comics
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.routers.ubooquity.rule=Host(`ubooquity.barlito.fr`)
+                - traefik.http.routers.ubooquity.service=ubooquity
+                - traefik.http.routers.ubooquity.entrypoints=http
+                - traefik.http.routers.ubooquity.middlewares=tls-redirectscheme
+
+                - traefik.http.services.ubooquity.loadbalancer.server.port=2202
+
+                - traefik.http.routers.ubooquity-secure.rule=Host(`ubooquity.barlito.fr`)
+                - traefik.http.routers.ubooquity-secure.service=ubooquity
+                - traefik.http.routers.ubooquity-secure.tls=true
+                - traefik.http.routers.ubooquity-secure.entrypoints=https
+                - traefik.http.routers.ubooquity-secure.tls.certresolver=letsencrypt
+
+                - traefik.http.routers.admin-ubooquity.rule=Host(`admin.ubooquity.barlito.fr`)
+                - traefik.http.routers.admin-ubooquity.service=admin-ubooquity
+                - traefik.http.routers.admin-ubooquity.entrypoints=http
+                - traefik.http.routers.admin-ubooquity.middlewares=tls-redirectscheme
+
+                - traefik.http.services.admin-ubooquity.loadbalancer.server.port=2203
+
+                - traefik.http.routers.admin-ubooquity-secure.rule=Host(`admin.ubooquity.barlito.fr`)
+                - traefik.http.routers.admin-ubooquity-secure.service=admin-ubooquity
+                - traefik.http.routers.admin-ubooquity-secure.tls=true
+                - traefik.http.routers.admin-ubooquity-secure.entrypoints=https
+                - traefik.http.routers.admin-ubooquity-secure.tls.certresolver=letsencrypt
+        networks:
+            - traefik_traefik_proxy
+
+networks:
+    traefik_traefik_proxy:
+        external: true
