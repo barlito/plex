@@ -11,6 +11,8 @@ medias/incomplete/*
 plex/config/*
 !plex/config/.gitkeep
 
+radarr/config/*
+!radarr/config/.gitkeep
 
 !transmission/.gitkeep
 transmission/config/*
