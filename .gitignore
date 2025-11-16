@@ -1,25 +1,40 @@
 .idea
 
+emby/config/*
+!emby/config/.gitkeep
+
 filebrowser/*
 !filebrowser/.gitkeep
 
-!medias/.gitkeep
+jellyfin/config/*
+!jellyfin/config/.gitkeep
+
 medias/complete/*
-!medias/complete/.gitkeep
 medias/incomplete/*
+!medias/.gitkeep
+!medias/complete/.gitkeep
+!medias/complete/Films/.gitkeep
+!medias/complete/Series/.gitkeep
+!medias/complete/Animes/.gitkeep
+!medias/complete/books/.gitkeep
+!medias/complete/comics/.gitkeep
 
 plex/config/*
 !plex/config/.gitkeep
 
+prowlarr/config/*
+!prowlarr/config/.gitkeep
+
 radarr/config/*
 !radarr/config/.gitkeep
 
-!transmission/.gitkeep
+sonarr/config/*
+!sonarr/config/.gitkeep
+
 transmission/config/*
-!transmission/config/.gitkeep
 transmission/watch/*
+!transmission/config/.gitkeep
 !transmission/watch/.gitkeep
 
-!ubooquity/.gitkeep
 ubooquity/config/*
 !ubooquity/config/.gitkeep

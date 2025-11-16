@@ -14,7 +14,6 @@ services:
 
                 - traefik.http.routers.filebrowser.rule=Host(`filebrowser.barlito.fr`)
                 - traefik.http.routers.filebrowser.entrypoints=http
-                - traefik.http.routers.filebrowser.middlewares=tls-redirectscheme
 
                 - traefik.http.services.filebrowser.loadbalancer.server.port=80
 
@@ -44,7 +43,6 @@ services:
 
                 - traefik.http.routers.transmission.rule=Host(`transmission.barlito.fr`)
                 - traefik.http.routers.transmission.entrypoints=http
-                - traefik.http.routers.transmission.middlewares=tls-redirectscheme
 
                 - traefik.http.services.transmission.loadbalancer.server.port=9091
 
@@ -89,7 +87,6 @@ services:
                 - traefik.http.routers.ubooquity.rule=Host(`ubooquity.barlito.fr`)
                 - traefik.http.routers.ubooquity.service=ubooquity
                 - traefik.http.routers.ubooquity.entrypoints=http
-                - traefik.http.routers.ubooquity.middlewares=tls-redirectscheme
 
                 - traefik.http.services.ubooquity.loadbalancer.server.port=2202
 
@@ -102,7 +99,6 @@ services:
                 - traefik.http.routers.admin-ubooquity.rule=Host(`admin.ubooquity.barlito.fr`)
                 - traefik.http.routers.admin-ubooquity.service=admin-ubooquity
                 - traefik.http.routers.admin-ubooquity.entrypoints=http
-                - traefik.http.routers.admin-ubooquity.middlewares=tls-redirectscheme
 
                 - traefik.http.services.admin-ubooquity.loadbalancer.server.port=2203
 
@@ -114,31 +110,137 @@ services:
         networks:
             - traefik_traefik_proxy
 
-    radarr:
-        image: lscr.io/linuxserver/radarr:latest
-        container_name: radarr
+#    radarr:
+#        image: lscr.io/linuxserver/radarr:latest
+#        container_name: radarr
+#        environment:
+#            - PUID=1000
+#            - PGID=1000
+#            - TZ=Europe/Paris
+#        volumes:
+#            - ./radarr/config:/config
+#            - ./medias:/downloads
+#        deploy:
+#            labels:
+#                - traefik.enable=true
+#
+#                - traefik.http.routers.radarr.rule=Host(`radarr.barlito.fr`)
+#                - traefik.http.routers.radarr.entrypoints=http
+#
+#                - traefik.http.services.radarr.loadbalancer.server.port=7878
+#
+#                - traefik.http.routers.radarr-secure.rule=Host(`radarr.barlito.fr`)
+#                - traefik.http.routers.radarr-secure.tls=true
+#                - traefik.http.routers.radarr-secure.entrypoints=https
+#                - traefik.http.routers.radarr-secure.tls.certresolver=letsencrypt
+#        networks:
+#            - traefik_traefik_proxy
+#
+#    sonarr:
+#        image: lscr.io/linuxserver/sonarr:latest
+#        container_name: sonarr
+#        environment:
+#            - PUID=1000
+#            - PGID=1000
+#            - TZ=Europe/Paris
+#        volumes:
+#            - ./sonarr/config:/config
+#            - ./medias:/downloads
+#        deploy:
+#            labels:
+#                - traefik.enable=true
+#
+#                - traefik.http.routers.sonarr.rule=Host(`sonarr.barlito.fr`)
+#                - traefik.http.routers.sonarr.entrypoints=http
+#
+#                - traefik.http.services.sonarr.loadbalancer.server.port=8989
+#
+#                - traefik.http.routers.sonarr-secure.rule=Host(`sonarr.barlito.fr`)
+#                - traefik.http.routers.sonarr-secure.tls=true
+#                - traefik.http.routers.sonarr-secure.entrypoints=https
+#                - traefik.http.routers.sonarr-secure.tls.certresolver=letsencrypt
+#        networks:
+#            - traefik_traefik_proxy
+#
+#    prowlarr:
+#        image: lscr.io/linuxserver/prowlarr:latest
+#        container_name: prowlarr
+#        environment:
+#            - PUID=1000
+#            - PGID=1000
+#            - TZ=Europe/Paris
+#        volumes:
+#            - ./prowlarr/config:/config
+#        deploy:
+#            labels:
+#                - traefik.enable=true
+#
+#                - traefik.http.routers.prowlarr.rule=Host(`prowlarr.barlito.fr`)
+#                - traefik.http.routers.prowlarr.entrypoints=http
+#
+#                - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+#
+#                - traefik.http.routers.prowlarr-secure.rule=Host(`prowlarr.barlito.fr`)
+#                - traefik.http.routers.prowlarr-secure.tls=true
+#                - traefik.http.routers.prowlarr-secure.entrypoints=https
+#                - traefik.http.routers.prowlarr-secure.tls.certresolver=letsencrypt
+#        networks:
+#            - traefik_traefik_proxy
+
+    emby:
+        image: lscr.io/linuxserver/emby:latest
+        container_name: emby
         environment:
             - PUID=1000
             - PGID=1000
             - TZ=Europe/Paris
         volumes:
-            - ./radarr/config:/config
-            - ./medias/complete/Films:/movies
-            - ./transmission/watch:/downloads
+            - ./emby/config:/config
+            - ./medias:/downloads
+        devices:
+            - /dev/dri:/dev/dri
         deploy:
             labels:
                 - traefik.enable=true
 
-                - traefik.http.routers.radarr.rule=Host(`radarr.barlito.fr`)
-                - traefik.http.routers.radarr.entrypoints=http
-                - traefik.http.routers.radarr.middlewares=tls-redirectscheme
+                - traefik.http.routers.emby.rule=Host(`emby.barlito.fr`)
+                - traefik.http.routers.emby.entrypoints=http
 
-                - traefik.http.services.radarr.loadbalancer.server.port=7878
+                - traefik.http.services.emby.loadbalancer.server.port=8096
 
-                - traefik.http.routers.radarr-secure.rule=Host(`radarr.barlito.fr`)
-                - traefik.http.routers.radarr-secure.tls=true
-                - traefik.http.routers.radarr-secure.entrypoints=https
-                - traefik.http.routers.radarr-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.emby-secure.rule=Host(`emby.barlito.fr`)
+                - traefik.http.routers.emby-secure.tls=true
+                - traefik.http.routers.emby-secure.entrypoints=https
+                - traefik.http.routers.emby-secure.tls.certresolver=letsencrypt
+        networks:
+            - traefik_traefik_proxy
+
+    jellyfin:
+        image: lscr.io/linuxserver/jellyfin:latest
+        container_name: jellyfin
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+            - JELLYFIN_PublishedServerUrl=https://jellyfin.barlito.fr
+        volumes:
+            - ./jellyfin/config:/config
+            - ./medias:/downloads
+        devices:
+            - /dev/dri:/dev/dri
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.routers.jellyfin.rule=Host(`jellyfin.barlito.fr`)
+                - traefik.http.routers.jellyfin.entrypoints=http
+
+                - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+
+                - traefik.http.routers.jellyfin-secure.rule=Host(`jellyfin.barlito.fr`)
+                - traefik.http.routers.jellyfin-secure.tls=true
+                - traefik.http.routers.jellyfin-secure.entrypoints=https
+                - traefik.http.routers.jellyfin-secure.tls.certresolver=letsencrypt
         networks:
             - traefik_traefik_proxy
 
