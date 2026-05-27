@@ -5,6 +5,7 @@ emby/config/*
 
 filebrowser/*
 !filebrowser/.gitkeep
+!filebrowser/.filebrowser.json
 
 jellyfin/config/*
 !jellyfin/config/.gitkeep
