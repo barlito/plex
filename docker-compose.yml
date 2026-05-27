@@ -2,10 +2,10 @@ version: '3'
 services:
     filebrowser:
         image: filebrowser/filebrowser
-        command: --noauth
         environment:
             - PUID=1000
             - PGID=1000
+            - FB_NOAUTH=true
         volumes:
             - ./medias/complete:/srv
             - ./filebrowser/database.db:/database.db
