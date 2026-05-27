@@ -2,6 +2,7 @@ version: '3'
 services:
     filebrowser:
         image: filebrowser/filebrowser
+        command: --noauth
         environment:
             - PUID=1000
             - PGID=1000
@@ -21,6 +22,7 @@ services:
                 - traefik.http.routers.filebrowser-secure.tls=true
                 - traefik.http.routers.filebrowser-secure.entrypoints=https
                 - traefik.http.routers.filebrowser-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.filebrowser-secure.middlewares=authelia-auth@file,security-headers@file
         networks:
             - traefik_traefik_proxy
 
@@ -39,8 +41,6 @@ services:
             labels:
                 - traefik.enable=true
 
-                - traefik.http.middlewares.transmission-auth.basicauth.users=root:$$2y$$05$$Q6qkpsZUMxVSp7ROUXS09eafCHmFVdzI0e.hPRY12V2jRAhCNtmuO
-
                 - traefik.http.routers.transmission.rule=Host(`transmission.barlito.fr`)
                 - traefik.http.routers.transmission.entrypoints=http
 
@@ -50,7 +50,7 @@ services:
                 - traefik.http.routers.transmission-secure.tls=true
                 - traefik.http.routers.transmission-secure.entrypoints=https
                 - traefik.http.routers.transmission-secure.tls.certresolver=letsencrypt
-                - traefik.http.routers.transmission-secure.middlewares=transmission-auth
+                - traefik.http.routers.transmission-secure.middlewares=authelia-auth@file,security-headers@file
         networks:
             - traefik_traefik_proxy
 
