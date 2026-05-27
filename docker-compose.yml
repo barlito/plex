@@ -95,7 +95,6 @@ services:
                 - traefik.http.routers.ubooquity-secure.tls=true
                 - traefik.http.routers.ubooquity-secure.entrypoints=https
                 - traefik.http.routers.ubooquity-secure.tls.certresolver=letsencrypt
-                - traefik.http.routers.ubooquity-secure.middlewares=authelia-auth@file,security-headers@file
 
                 - traefik.http.routers.admin-ubooquity.rule=Host(`admin.ubooquity.barlito.fr`)
                 - traefik.http.routers.admin-ubooquity.service=admin-ubooquity
@@ -108,7 +107,6 @@ services:
                 - traefik.http.routers.admin-ubooquity-secure.tls=true
                 - traefik.http.routers.admin-ubooquity-secure.entrypoints=https
                 - traefik.http.routers.admin-ubooquity-secure.tls.certresolver=letsencrypt
-                - traefik.http.routers.admin-ubooquity-secure.middlewares=authelia-auth@file,security-headers@file
         networks:
             - traefik_traefik_proxy
 
