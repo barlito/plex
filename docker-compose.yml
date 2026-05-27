@@ -5,10 +5,10 @@ services:
         environment:
             - PUID=1000
             - PGID=1000
+            - FB_NOAUTH=true
         volumes:
             - ./medias/complete:/srv
             - ./filebrowser/database.db:/database.db
-            - ./filebrowser/.filebrowser.json:/.filebrowser.json:ro
         deploy:
             labels:
                 - traefik.enable=true
