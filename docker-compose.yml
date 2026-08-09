@@ -65,7 +65,6 @@ services:
 
     ubooquity:
         image: lscr.io/linuxserver/ubooquity:latest
-        container_name: ubooquity
         environment:
             - PUID=1000
             - PGID=1000
@@ -168,7 +167,6 @@ services:
 
     emby:
         image: lscr.io/linuxserver/emby:latest
-        container_name: emby
         environment:
             - PUID=1000
             - PGID=1000
@@ -193,7 +191,6 @@ services:
 
     jellyfin:
         image: lscr.io/linuxserver/jellyfin:latest
-        container_name: jellyfin
         environment:
             - PUID=1000
             - PGID=1000
