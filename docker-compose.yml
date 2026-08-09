@@ -1,15 +1,3 @@
-# Tous les services sont exposés en HTTPS UNIQUEMENT.
-#
-# Ne PAS rajouter de router sur `entrypoints=http`. traefik-base définit un
-# catch-all `http-catchall` qui redirige http -> https, mais il porte
-# `priority: 1` — donc n'importe quel router avec une règle `Host(...)` le bat
-# et sert l'application en clair. Et comme le middleware Authelia n'est posé
-# que sur les routers `-secure`, cette variante http contourne l'authentification.
-#
-# Y coller `authelia-auth@file` ne règle rien : le cookie de session Authelia
-# est émis sur `https://auth.barlito.fr` avec l'attribut Secure, donc le
-# navigateur ne le renvoie jamais en http -> boucle de redirection infinie.
-# La seule issue correcte est de laisser le catch-all faire la redirection.
 services:
     filebrowser:
         image: filebrowser/filebrowser
