@@ -9,21 +9,27 @@ filebrowser/*
 jellyfin/config/*
 !jellyfin/config/.gitkeep
 
-medias/complete/*
-medias/incomplete/*
+# On ignore les médias mais on garde l'arborescence : il faut re-autoriser les
+# dossiers eux-mêmes (`!.../*/`), sinon git ne descend jamais dedans et les
+# négations sur les .gitkeep sont sans effet.
+medias/complete/**
+medias/incoming/**
+medias/incomplete/**
 !medias/.gitkeep
 !medias/complete/.gitkeep
-!medias/complete/Films/.gitkeep
-!medias/complete/Series/.gitkeep
-!medias/complete/Animes/.gitkeep
-!medias/complete/books/.gitkeep
-!medias/complete/comics/.gitkeep
+!medias/complete/*/
+!medias/complete/**/.gitkeep
+!medias/incoming/.gitkeep
+!medias/incomplete/.gitkeep
 
 plex/config/*
 !plex/config/.gitkeep
 
 prowlarr/config/*
 !prowlarr/config/.gitkeep
+
+bazarr/config/*
+!bazarr/config/.gitkeep
 
 radarr/config/*
 !radarr/config/.gitkeep
