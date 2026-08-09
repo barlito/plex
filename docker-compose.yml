@@ -1,4 +1,15 @@
-version: '3'
+# Tous les services sont exposés en HTTPS UNIQUEMENT.
+#
+# Ne PAS rajouter de router sur `entrypoints=http`. traefik-base définit un
+# catch-all `http-catchall` qui redirige http -> https, mais il porte
+# `priority: 1` — donc n'importe quel router avec une règle `Host(...)` le bat
+# et sert l'application en clair. Et comme le middleware Authelia n'est posé
+# que sur les routers `-secure`, cette variante http contourne l'authentification.
+#
+# Y coller `authelia-auth@file` ne règle rien : le cookie de session Authelia
+# est émis sur `https://auth.barlito.fr` avec l'attribut Secure, donc le
+# navigateur ne le renvoie jamais en http -> boucle de redirection infinie.
+# La seule issue correcte est de laisser le catch-all faire la redirection.
 services:
     filebrowser:
         image: filebrowser/filebrowser
@@ -12,9 +23,6 @@ services:
         deploy:
             labels:
                 - traefik.enable=true
-
-                - traefik.http.routers.filebrowser.rule=Host(`filebrowser.barlito.fr`)
-                - traefik.http.routers.filebrowser.entrypoints=http
 
                 - traefik.http.services.filebrowser.loadbalancer.server.port=80
 
@@ -40,9 +48,6 @@ services:
         deploy:
             labels:
                 - traefik.enable=true
-
-                - traefik.http.routers.transmission.rule=Host(`transmission.barlito.fr`)
-                - traefik.http.routers.transmission.entrypoints=http
 
                 - traefik.http.services.transmission.loadbalancer.server.port=9091
 
@@ -84,10 +89,6 @@ services:
             labels:
                 - traefik.enable=true
 
-                - traefik.http.routers.ubooquity.rule=Host(`ubooquity.barlito.fr`)
-                - traefik.http.routers.ubooquity.service=ubooquity
-                - traefik.http.routers.ubooquity.entrypoints=http
-
                 - traefik.http.services.ubooquity.loadbalancer.server.port=2202
 
                 - traefik.http.routers.ubooquity-secure.rule=Host(`ubooquity.barlito.fr`)
@@ -95,10 +96,6 @@ services:
                 - traefik.http.routers.ubooquity-secure.tls=true
                 - traefik.http.routers.ubooquity-secure.entrypoints=https
                 - traefik.http.routers.ubooquity-secure.tls.certresolver=letsencrypt
-
-                - traefik.http.routers.admin-ubooquity.rule=Host(`admin.ubooquity.barlito.fr`)
-                - traefik.http.routers.admin-ubooquity.service=admin-ubooquity
-                - traefik.http.routers.admin-ubooquity.entrypoints=http
 
                 - traefik.http.services.admin-ubooquity.loadbalancer.server.port=2203
 
@@ -124,15 +121,13 @@ services:
 #            labels:
 #                - traefik.enable=true
 #
-#                - traefik.http.routers.radarr.rule=Host(`radarr.barlito.fr`)
-#                - traefik.http.routers.radarr.entrypoints=http
-#
 #                - traefik.http.services.radarr.loadbalancer.server.port=7878
 #
 #                - traefik.http.routers.radarr-secure.rule=Host(`radarr.barlito.fr`)
 #                - traefik.http.routers.radarr-secure.tls=true
 #                - traefik.http.routers.radarr-secure.entrypoints=https
 #                - traefik.http.routers.radarr-secure.tls.certresolver=letsencrypt
+#                - traefik.http.routers.radarr-secure.middlewares=authelia-auth@file,security-headers@file
 #        networks:
 #            - traefik_traefik_proxy
 #
@@ -150,15 +145,13 @@ services:
 #            labels:
 #                - traefik.enable=true
 #
-#                - traefik.http.routers.sonarr.rule=Host(`sonarr.barlito.fr`)
-#                - traefik.http.routers.sonarr.entrypoints=http
-#
 #                - traefik.http.services.sonarr.loadbalancer.server.port=8989
 #
 #                - traefik.http.routers.sonarr-secure.rule=Host(`sonarr.barlito.fr`)
 #                - traefik.http.routers.sonarr-secure.tls=true
 #                - traefik.http.routers.sonarr-secure.entrypoints=https
 #                - traefik.http.routers.sonarr-secure.tls.certresolver=letsencrypt
+#                - traefik.http.routers.sonarr-secure.middlewares=authelia-auth@file,security-headers@file
 #        networks:
 #            - traefik_traefik_proxy
 #
@@ -175,15 +168,13 @@ services:
 #            labels:
 #                - traefik.enable=true
 #
-#                - traefik.http.routers.prowlarr.rule=Host(`prowlarr.barlito.fr`)
-#                - traefik.http.routers.prowlarr.entrypoints=http
-#
 #                - traefik.http.services.prowlarr.loadbalancer.server.port=9696
 #
 #                - traefik.http.routers.prowlarr-secure.rule=Host(`prowlarr.barlito.fr`)
 #                - traefik.http.routers.prowlarr-secure.tls=true
 #                - traefik.http.routers.prowlarr-secure.entrypoints=https
 #                - traefik.http.routers.prowlarr-secure.tls.certresolver=letsencrypt
+#                - traefik.http.routers.prowlarr-secure.middlewares=authelia-auth@file,security-headers@file
 #        networks:
 #            - traefik_traefik_proxy
 
@@ -202,9 +193,6 @@ services:
         deploy:
             labels:
                 - traefik.enable=true
-
-                - traefik.http.routers.emby.rule=Host(`emby.barlito.fr`)
-                - traefik.http.routers.emby.entrypoints=http
 
                 - traefik.http.services.emby.loadbalancer.server.port=8096
 
@@ -231,9 +219,6 @@ services:
         deploy:
             labels:
                 - traefik.enable=true
-
-                - traefik.http.routers.jellyfin.rule=Host(`jellyfin.barlito.fr`)
-                - traefik.http.routers.jellyfin.entrypoints=http
 
                 - traefik.http.services.jellyfin.loadbalancer.server.port=8096
 
