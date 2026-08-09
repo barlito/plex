@@ -17,9 +17,10 @@ restart:
 .PHONY: init
 init:
 	@echo "Creating directory structure..."
+	@mkdir -p medias/incoming
 	@mkdir -p medias/incomplete
 	@mkdir -p medias/complete/Films
-	@mkdir -p medias/complete/Series
+	@mkdir -p medias/complete/SeriesTV
 	@mkdir -p medias/complete/Animes
 	@mkdir -p medias/complete/books
 	@mkdir -p medias/complete/comics
@@ -28,6 +29,7 @@ init:
 	@mkdir -p radarr/config
 	@mkdir -p sonarr/config
 	@mkdir -p prowlarr/config
+	@mkdir -p bazarr/config
 	@mkdir -p emby/config
 	@mkdir -p jellyfin/config
 	@mkdir -p transmission/config
