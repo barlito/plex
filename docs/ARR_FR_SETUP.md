@@ -68,7 +68,7 @@ grand groupe de release française (1950) et du bonus 4K.
   VFQ et VOSTFR/VO.
 - Un titre contenant MULTi n'est jamais compté comme `FRENCH` seul (`MULTi.FRENCH`, `MULTi-FRENCH`,
   `FRENCH.MULTi`, `MULTi_FRENCH`).
-- Les tailles préférées (`preferred`) sont de 95 Mo/min en 2160p et 60 Mo/min en 1080p, sous les
+- Les tailles préférées (`preferred`) sont de 95 Mo/min en 2160p (110 pour le Bluray 2160p de Radarr, dont le minimum est 102) et 60 Mo/min en 1080p, sous les
   plafonds : à qualité égale, Radarr et Sonarr ne choisissent pas systématiquement le plus gros
   fichier.
 - Les formats `2160p Bonus` et `French Audio (generic)` sont des formats personnalisés locaux, dans

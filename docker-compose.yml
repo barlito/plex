@@ -22,10 +22,8 @@ services:
         networks:
             - traefik_traefik_proxy
 
-    # ATTENTION : `download-dir` doit valoir /downloads/incoming (et surtout pas
-    # /downloads/complete/Films, qui est le root folder de Radarr). Ce réglage
-    # vit dans transmission/config/settings.json, l'image n'expose aucune
-    # variable d'environnement pour le piloter — voir la PR pour la procédure.
+    # download-dir must be /downloads/incoming, never Radarr's root folder. It is
+    # only settable in transmission/config/settings.json: see docs/TRANSMISSION_SETUP.md.
     transmission:
         image: lscr.io/linuxserver/transmission:latest
         environment:
@@ -98,15 +96,7 @@ services:
         networks:
             - traefik_traefik_proxy
 
-    # Radarr / Sonarr montent ./medias sur /downloads, comme Transmission :
-    # même point de montage => hardlinks possibles entre le dossier de
-    # téléchargement (/downloads/incoming) et la bibliothèque
-    # (/downloads/complete/...). Import instantané, zéro duplication disque,
-    # et le torrent continue de seeder.
-    #
-    # Transmission DOIT télécharger dans /downloads/incoming (et pas dans
-    # /downloads/complete/Films) : Radarr refuse un client dont le dossier de
-    # destination est aussi son root folder.
+    # Same /downloads mount as Transmission so imports are hardlinks.
     radarr:
         image: lscr.io/linuxserver/radarr:latest
         environment:
@@ -153,8 +143,6 @@ services:
         networks:
             - traefik_traefik_proxy
 
-    # Prowlarr ne gère que des indexeurs : aucun accès aux médias, donc pas de
-    # montage de ./medias.
     prowlarr:
         image: lscr.io/linuxserver/prowlarr:latest
         environment:
@@ -177,9 +165,7 @@ services:
         networks:
             - traefik_traefik_proxy
 
-    # Bazarr : récupération automatique des sous-titres (FR en priorité).
-    # Il doit voir la bibliothèque avec les MÊMES chemins que Radarr/Sonarr,
-    # d'où le montage identique de ./medias sur /downloads.
+    # Must see the library at the same paths as Radarr/Sonarr.
     bazarr:
         image: lscr.io/linuxserver/bazarr:latest
         environment:
