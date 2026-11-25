@@ -30,6 +30,7 @@ init:
 	@mkdir -p sonarr/config
 	@mkdir -p prowlarr/config
 	@mkdir -p bazarr/config
+	@mkdir -p seerr/config
 	@mkdir -p emby/config
 	@mkdir -p jellyfin/config
 	@mkdir -p transmission/config

@@ -35,6 +35,9 @@ radarr/config/*
 sonarr/config/*
 !sonarr/config/.gitkeep
 
+seerr/config/*
+!seerr/config/.gitkeep
+
 transmission/config/*
 transmission/watch/*
 !transmission/config/.gitkeep

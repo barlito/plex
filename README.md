@@ -15,6 +15,7 @@ Self-hosted media server stack running on Docker Swarm behind Traefik.
 | **Prowlarr** | `prowlarr.barlito.fr` | Indexer manager feeding Radarr/Sonarr (behind Authelia) |
 | **Bazarr** | `bazarr.barlito.fr` | Subtitles (behind Authelia) |
 | **FileBrowser** | `filebrowser.barlito.fr` | Web file manager over the media library (behind Authelia) |
+| **Seerr** | `demandes.barlito.fr` | Request portal for the family (Jellyfin login, native auth, not behind Authelia) |
 | **Ubooquity** | `ubooquity.barlito.fr` | Books & comics server (admin UI on `admin.ubooquity.barlito.fr`) |
 
 All media lives under `./medias`, mounted on `/downloads` in every service so Radarr/Sonarr import downloads as hardlinks. Transmission must download into `/downloads/incoming`: see [docs/TRANSMISSION_SETUP.md](docs/TRANSMISSION_SETUP.md).
