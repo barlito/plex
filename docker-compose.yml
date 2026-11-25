@@ -203,6 +203,26 @@ services:
         networks:
             - traefik_traefik_proxy
 
+    seerr:
+        image: seerr/seerr:v3.5
+        environment:
+            - TZ=Europe/Paris
+        volumes:
+            - ./seerr/config:/app/config
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.services.seerr.loadbalancer.server.port=5055
+
+                - traefik.http.routers.seerr-secure.rule=Host(`demandes.barlito.fr`)
+                - traefik.http.routers.seerr-secure.tls=true
+                - traefik.http.routers.seerr-secure.entrypoints=https
+                - traefik.http.routers.seerr-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.seerr-secure.middlewares=security-headers@file
+        networks:
+            - traefik_traefik_proxy
+
     emby:
         image: lscr.io/linuxserver/emby:latest
         environment:
