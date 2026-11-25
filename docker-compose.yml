@@ -22,6 +22,8 @@ services:
         networks:
             - traefik_traefik_proxy
 
+    # download-dir must be /downloads/incoming, never Radarr's root folder. It is
+    # only settable in transmission/config/settings.json: see docs/TRANSMISSION_SETUP.md.
     transmission:
         image: lscr.io/linuxserver/transmission:latest
         environment:
@@ -65,7 +67,6 @@ services:
 
     ubooquity:
         image: lscr.io/linuxserver/ubooquity:latest
-        container_name: ubooquity
         environment:
             - PUID=1000
             - PGID=1000
@@ -95,80 +96,101 @@ services:
         networks:
             - traefik_traefik_proxy
 
-#    radarr:
-#        image: lscr.io/linuxserver/radarr:latest
-#        container_name: radarr
-#        environment:
-#            - PUID=1000
-#            - PGID=1000
-#            - TZ=Europe/Paris
-#        volumes:
-#            - ./radarr/config:/config
-#            - ./medias:/downloads
-#        deploy:
-#            labels:
-#                - traefik.enable=true
-#
-#                - traefik.http.services.radarr.loadbalancer.server.port=7878
-#
-#                - traefik.http.routers.radarr-secure.rule=Host(`radarr.barlito.fr`)
-#                - traefik.http.routers.radarr-secure.tls=true
-#                - traefik.http.routers.radarr-secure.entrypoints=https
-#                - traefik.http.routers.radarr-secure.tls.certresolver=letsencrypt
-#                - traefik.http.routers.radarr-secure.middlewares=authelia-auth@file,security-headers@file
-#        networks:
-#            - traefik_traefik_proxy
-#
-#    sonarr:
-#        image: lscr.io/linuxserver/sonarr:latest
-#        container_name: sonarr
-#        environment:
-#            - PUID=1000
-#            - PGID=1000
-#            - TZ=Europe/Paris
-#        volumes:
-#            - ./sonarr/config:/config
-#            - ./medias:/downloads
-#        deploy:
-#            labels:
-#                - traefik.enable=true
-#
-#                - traefik.http.services.sonarr.loadbalancer.server.port=8989
-#
-#                - traefik.http.routers.sonarr-secure.rule=Host(`sonarr.barlito.fr`)
-#                - traefik.http.routers.sonarr-secure.tls=true
-#                - traefik.http.routers.sonarr-secure.entrypoints=https
-#                - traefik.http.routers.sonarr-secure.tls.certresolver=letsencrypt
-#                - traefik.http.routers.sonarr-secure.middlewares=authelia-auth@file,security-headers@file
-#        networks:
-#            - traefik_traefik_proxy
-#
-#    prowlarr:
-#        image: lscr.io/linuxserver/prowlarr:latest
-#        container_name: prowlarr
-#        environment:
-#            - PUID=1000
-#            - PGID=1000
-#            - TZ=Europe/Paris
-#        volumes:
-#            - ./prowlarr/config:/config
-#        deploy:
-#            labels:
-#                - traefik.enable=true
-#
-#                - traefik.http.services.prowlarr.loadbalancer.server.port=9696
-#
-#                - traefik.http.routers.prowlarr-secure.rule=Host(`prowlarr.barlito.fr`)
-#                - traefik.http.routers.prowlarr-secure.tls=true
-#                - traefik.http.routers.prowlarr-secure.entrypoints=https
-#                - traefik.http.routers.prowlarr-secure.tls.certresolver=letsencrypt
-#                - traefik.http.routers.prowlarr-secure.middlewares=authelia-auth@file,security-headers@file
-#        networks:
-#            - traefik_traefik_proxy
+    # Same /downloads mount as Transmission so imports are hardlinks.
+    radarr:
+        image: lscr.io/linuxserver/radarr:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+        volumes:
+            - ./radarr/config:/config
+            - ./medias:/downloads
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.services.radarr.loadbalancer.server.port=7878
+
+                - traefik.http.routers.radarr-secure.rule=Host(`radarr.barlito.fr`)
+                - traefik.http.routers.radarr-secure.tls=true
+                - traefik.http.routers.radarr-secure.entrypoints=https
+                - traefik.http.routers.radarr-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.radarr-secure.middlewares=authelia-auth@file,security-headers@file
+        networks:
+            - traefik_traefik_proxy
+
+    sonarr:
+        image: lscr.io/linuxserver/sonarr:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+        volumes:
+            - ./sonarr/config:/config
+            - ./medias:/downloads
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.services.sonarr.loadbalancer.server.port=8989
+
+                - traefik.http.routers.sonarr-secure.rule=Host(`sonarr.barlito.fr`)
+                - traefik.http.routers.sonarr-secure.tls=true
+                - traefik.http.routers.sonarr-secure.entrypoints=https
+                - traefik.http.routers.sonarr-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.sonarr-secure.middlewares=authelia-auth@file,security-headers@file
+        networks:
+            - traefik_traefik_proxy
+
+    prowlarr:
+        image: lscr.io/linuxserver/prowlarr:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+        volumes:
+            - ./prowlarr/config:/config
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+
+                - traefik.http.routers.prowlarr-secure.rule=Host(`prowlarr.barlito.fr`)
+                - traefik.http.routers.prowlarr-secure.tls=true
+                - traefik.http.routers.prowlarr-secure.entrypoints=https
+                - traefik.http.routers.prowlarr-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.prowlarr-secure.middlewares=authelia-auth@file,security-headers@file
+        networks:
+            - traefik_traefik_proxy
+
+    # Must see the library at the same paths as Radarr/Sonarr.
+    bazarr:
+        image: lscr.io/linuxserver/bazarr:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+        volumes:
+            - ./bazarr/config:/config
+            - ./medias:/downloads
+        deploy:
+            labels:
+                - traefik.enable=true
+
+                - traefik.http.services.bazarr.loadbalancer.server.port=6767
+
+                - traefik.http.routers.bazarr-secure.rule=Host(`bazarr.barlito.fr`)
+                - traefik.http.routers.bazarr-secure.tls=true
+                - traefik.http.routers.bazarr-secure.entrypoints=https
+                - traefik.http.routers.bazarr-secure.tls.certresolver=letsencrypt
+                - traefik.http.routers.bazarr-secure.middlewares=authelia-auth@file,security-headers@file
+        networks:
+            - traefik_traefik_proxy
 
     emby:
         image: lscr.io/linuxserver/emby:latest
-        container_name: emby
         environment:
             - PUID=1000
             - PGID=1000
@@ -193,7 +215,6 @@ services:
 
     jellyfin:
         image: lscr.io/linuxserver/jellyfin:latest
-        container_name: jellyfin
         environment:
             - PUID=1000
             - PGID=1000

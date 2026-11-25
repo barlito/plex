@@ -9,21 +9,25 @@ filebrowser/*
 jellyfin/config/*
 !jellyfin/config/.gitkeep
 
-medias/complete/*
-medias/incomplete/*
+# Directories must be re-included (`!.../*/`) for the .gitkeep negations to apply.
+medias/complete/**
+medias/incoming/**
+medias/incomplete/**
 !medias/.gitkeep
 !medias/complete/.gitkeep
-!medias/complete/Films/.gitkeep
-!medias/complete/Series/.gitkeep
-!medias/complete/Animes/.gitkeep
-!medias/complete/books/.gitkeep
-!medias/complete/comics/.gitkeep
+!medias/complete/*/
+!medias/complete/**/.gitkeep
+!medias/incoming/.gitkeep
+!medias/incomplete/.gitkeep
 
 plex/config/*
 !plex/config/.gitkeep
 
 prowlarr/config/*
 !prowlarr/config/.gitkeep
+
+bazarr/config/*
+!bazarr/config/.gitkeep
 
 radarr/config/*
 !radarr/config/.gitkeep
