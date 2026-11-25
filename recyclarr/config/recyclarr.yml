@@ -1,0 +1,215 @@
+# yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
+#
+# Language CF scores add up when a title carries several tags (VFF.VFQ,
+# FRENCH.VFF, MULTi.VFF.VFQ...). MULTi is therefore set above the sum of every
+# VF score that can co-occur (FR HD-UHD) or VF penalty (FR Anime), and
+# until_score equals the MULTi score.
+
+radarr:
+    movies:
+        base_url: http://radarr:7878
+        api_key: !secret radarr_api_key
+        delete_old_custom_formats: false
+
+        quality_definition:
+            type: movie
+            qualities:
+                - { name: WEBDL-2160p, max: 125, preferred: 95 }
+                - { name: WEBRip-2160p, max: 125, preferred: 95 }
+                - { name: Bluray-2160p, max: 125, preferred: 110 }
+                - { name: HDTV-2160p, max: 125, preferred: 95 }
+                - { name: WEBDL-1080p, max: 85, preferred: 60 }
+                - { name: WEBRip-1080p, max: 85, preferred: 60 }
+                - { name: Bluray-1080p, max: 85, preferred: 60 }
+                - { name: HDTV-1080p, max: 85, preferred: 60 }
+
+        quality_profiles:
+            - name: FR HD-UHD
+              score_set: french-multi-vf
+              min_format_score: 0
+              upgrade:
+                  allowed: true
+                  until_quality: Bluray|WEB 1080p-2160p
+                  until_score: 40000
+              qualities:
+                  - name: Bluray|WEB 1080p-2160p
+                    qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
+
+        custom_formats:
+            - trash_ids:
+                  - 4b900e171accbfb172729b63323ea8ca # MULTi
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 40000
+            - trash_ids:
+                  - 404c08fd0bd67f39b4d8e5709319094e # VFF
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 5000
+            - trash_ids:
+                  - b6ace47331a1d3b77942fc18156f6df6 # VFQ
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 2500
+            - trash_ids:
+                  - 9172b2f683f6223e3a1846427b417a3d # VOSTFR
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 0
+            - trash_ids:
+                  - 29b5f7b1a5f20f64228786c3ab1bdc7d # VF2
+                  - b3fb499641d7b3c2006be1d9eb014cb3 # VFB
+                  - 52772f1cad6b5d26c2551f79bc538a50 # VFI
+                  - 4cafa20d5584f6ba1871d1b8941aa3cb # VOF
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 5000
+            - trash_ids:
+                  - 95aa50f71a01c82354a7a2b385f1c4d8 # VQ
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 2500
+            - trash_ids:
+                  - fr-french-generic # French Audio (generic)
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 4800
+            - trash_ids:
+                  - fr-2160p-bonus
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 100
+
+        custom_format_groups:
+            add:
+                - trash_id: 59f7ab9ff64d0026b011b985b1cc8670 # [Unwanted] Unwanted Formats French
+                  assign_scores_to:
+                      - name: FR HD-UHD
+                - trash_id: 12a919c8a5e2342db6e9c0b4e3c0756e # [Release Groups] French
+                  select_all: true
+                  assign_scores_to:
+                      - name: FR HD-UHD
+                - trash_id: 7fc2751eef7e6bdc70b74136e5e35c76 # [HDR Formats] DV (w/o HDR fallback)
+                  assign_scores_to:
+                      - name: FR HD-UHD
+
+sonarr:
+    series:
+        base_url: http://sonarr:8989
+        api_key: !secret sonarr_api_key
+        delete_old_custom_formats: false
+
+        quality_definition:
+            type: series
+            qualities:
+                - { name: WEBDL-2160p, max: 125, preferred: 95 }
+                - { name: WEBRip-2160p, max: 125, preferred: 95 }
+                - { name: Bluray-2160p, max: 125, preferred: 95 }
+                - { name: HDTV-2160p, max: 125, preferred: 95 }
+                - { name: WEBDL-1080p, max: 85, preferred: 60 }
+                - { name: WEBRip-1080p, max: 85, preferred: 60 }
+                - { name: Bluray-1080p, max: 85, preferred: 60 }
+                - { name: HDTV-1080p, max: 85, preferred: 60 }
+
+        quality_profiles:
+            - name: FR HD-UHD
+              score_set: french-multi-vf
+              min_format_score: 0
+              upgrade:
+                  allowed: true
+                  until_quality: Bluray|WEB 1080p-2160p
+                  until_score: 40000
+              qualities:
+                  - name: Bluray|WEB 1080p-2160p
+                    qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
+            - name: FR Anime
+              score_set: french-anime-multi
+              min_format_score: 0
+              upgrade:
+                  allowed: true
+                  until_quality: Bluray|WEB 1080p-2160p
+                  until_score: 80000
+              qualities:
+                  - name: Bluray|WEB 1080p-2160p
+                    qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
+
+        custom_formats:
+            - trash_ids:
+                  - 7ba05c6e0e14e793538174c679126996 # MULTi
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 40000
+                  - name: FR Anime
+                    score: 80000
+            - trash_ids:
+                  - 2c29a39a4fdfd6d258799bc4c09731b9 # VFF
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 5000
+            - trash_ids:
+                  - 7a7f4e4f58bd1058440236d033a90b67 # VFQ
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 2500
+            - trash_ids:
+                  - 07a32f77690263bb9fda1842db7e273f # VOSTFR
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 0
+                  - name: FR Anime
+                    score: 500
+            - trash_ids:
+                  - 2c29a39a4fdfd6d258799bc4c09731b9 # VFF
+                  - 7a7f4e4f58bd1058440236d033a90b67 # VFQ
+                  - 34789ec3caa819f087e23bbf9999daf7 # VF2
+                  - 0ce1e39a4676c6692ce47935278dac76 # VFB
+                  - b6816a0e1d4b64bf3550ad3b74b009b6 # VFI
+                  - 82085412d9a53ba8d8e46fc624eb701d # VQ
+                  - fr-french-generic # French Audio (generic)
+              assign_scores_to:
+                  - name: FR Anime
+                    score: -10000
+            - trash_ids:
+                  - 34789ec3caa819f087e23bbf9999daf7 # VF2
+                  - 0ce1e39a4676c6692ce47935278dac76 # VFB
+                  - b6816a0e1d4b64bf3550ad3b74b009b6 # VFI
+                  - 7ae924ee9b2f39df3283c6c0beb8a2aa # VOF
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 5000
+            - trash_ids:
+                  - 82085412d9a53ba8d8e46fc624eb701d # VQ
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 2500
+            - trash_ids:
+                  - fr-french-generic # French Audio (generic)
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 4800
+            - trash_ids:
+                  - fr-2160p-bonus
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 100
+                  - name: FR Anime
+                    score: 100
+
+        custom_format_groups:
+            add:
+                - trash_id: a23c8675c79118544fd74153394fa589 # [Unwanted] Unwanted Formats French
+                  assign_scores_to:
+                      - name: FR HD-UHD
+                      - name: FR Anime
+                - trash_id: 9fa0bf3c8f8f00154431c3323a29eef2 # [Release Groups] French
+                  select_all: true
+                  assign_scores_to:
+                      - name: FR HD-UHD
+                - trash_id: cb745c70bc9ea2ae49b72cfeed17cfd2 # [Release Groups] French Anime
+                  select_all: true
+                  assign_scores_to:
+                      - name: FR Anime
+                - trash_id: d776a1ea912a117d66d83b880ff2055d # [HDR Formats] DV (w/o HDR fallback)
+                  assign_scores_to:
+                      - name: FR HD-UHD
+                      - name: FR Anime

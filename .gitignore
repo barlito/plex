@@ -45,3 +45,9 @@ transmission/watch/*
 
 ubooquity/config/*
 !ubooquity/config/.gitkeep
+
+recyclarr/config/*
+!recyclarr/config/recyclarr.yml
+!recyclarr/config/secrets.yml.example
+!recyclarr/config/settings.yml
+!recyclarr/config/custom-formats/

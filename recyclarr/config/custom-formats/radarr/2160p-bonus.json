@@ -1,0 +1,16 @@
+{
+    "trash_id": "fr-2160p-bonus",
+    "name": "2160p Bonus",
+    "includeCustomFormatWhenRenaming": false,
+    "specifications": [
+        {
+            "name": "2160p",
+            "implementation": "ResolutionSpecification",
+            "negate": false,
+            "required": true,
+            "fields": {
+                "value": 2160
+            }
+        }
+    ]
+}
