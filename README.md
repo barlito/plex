@@ -11,6 +11,7 @@ Self-hosted media server stack running on Docker Swarm behind Traefik.
 | **Emby** | `emby.barlito.fr` | Media server (hardware transcoding via `/dev/dri`) |
 | **Transmission** | `transmission.barlito.fr` | BitTorrent client (behind Authelia) |
 | **FileBrowser** | `filebrowser.barlito.fr` | Web file manager over the media library (behind Authelia) |
+| **Seerr** | `demandes.barlito.fr` | Request portal for the family (Jellyfin login, native auth, not behind Authelia) |
 | **Ubooquity** | `ubooquity.barlito.fr` | Books & comics server (admin UI on `admin.ubooquity.barlito.fr`) |
 
 All media lives under `./medias` (bind mounts), shared between the download client and the media servers. Radarr / Sonarr / Prowlarr are present but currently commented out in the compose file.
