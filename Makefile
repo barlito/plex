@@ -35,6 +35,7 @@ init:
 	@mkdir -p transmission/config
 	@mkdir -p transmission/watch
 	@mkdir -p ubooquity/config
+	@mkdir -p recyclarr/config
 	@touch filebrowser/database.db
 	@echo "✓ Directory structure ready for production!"
 

@@ -252,6 +252,20 @@ services:
         networks:
             - traefik_traefik_proxy
 
+    # Recyclarr only talks to the Radarr/Sonarr APIs: no ingress, no media mount.
+    # API keys come from recyclarr/config/secrets.yml (gitignored, see
+    # secrets.yml.example); the sync fails if the file is missing.
+    recyclarr:
+        image: ghcr.io/recyclarr/recyclarr:8.8
+        user: "1000:1000"
+        environment:
+            - TZ=Europe/Paris
+            - CRON_SCHEDULE=@daily
+        volumes:
+            - ./recyclarr/config:/config
+        networks:
+            - traefik_traefik_proxy
+
 networks:
     traefik_traefik_proxy:
         external: true
