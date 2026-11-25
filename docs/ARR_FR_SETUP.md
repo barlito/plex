@@ -20,7 +20,7 @@ Recyclarr lit les clés dans `recyclarr/config/secrets.yml`, un fichier ignoré 
    tout de suite :
 
    ```bash
-   docker exec $(docker ps -q -f name=plex_recyclarr) recyclarr sync
+   make recyclarr-sync
    ```
 
 Si `secrets.yml` est absent ou incomplet, rien n'est synchronisé et le log du service contient une

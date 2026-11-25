@@ -14,6 +14,10 @@ restart:
 	make undeploy
 	make deploy
 
+.PHONY: recyclarr-sync
+recyclarr-sync:
+	docker exec $$(docker ps -q -f name=$(stack_name)_recyclarr) recyclarr sync
+
 .PHONY: init
 init:
 	@echo "Creating directory structure..."
