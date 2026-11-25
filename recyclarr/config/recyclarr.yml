@@ -55,6 +55,24 @@ radarr:
                   - name: FR HD-UHD
                     score: 0
             - trash_ids:
+                  - 29b5f7b1a5f20f64228786c3ab1bdc7d # VF2
+                  - b3fb499641d7b3c2006be1d9eb014cb3 # VFB
+                  - 52772f1cad6b5d26c2551f79bc538a50 # VFI
+                  - 4cafa20d5584f6ba1871d1b8941aa3cb # VOF
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 5000
+            - trash_ids:
+                  - 95aa50f71a01c82354a7a2b385f1c4d8 # VQ
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 2500
+            - trash_ids:
+                  - fr-french-generic # French Audio (generic)
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 4800
+            - trash_ids:
                   - fr-2160p-bonus
               assign_scores_to:
                   - name: FR HD-UHD
@@ -145,9 +163,28 @@ sonarr:
                   - 0ce1e39a4676c6692ce47935278dac76 # VFB
                   - b6816a0e1d4b64bf3550ad3b74b009b6 # VFI
                   - 82085412d9a53ba8d8e46fc624eb701d # VQ
+                  - fr-french-generic # French Audio (generic)
               assign_scores_to:
                   - name: FR Anime
                     score: -10000
+            - trash_ids:
+                  - 34789ec3caa819f087e23bbf9999daf7 # VF2
+                  - 0ce1e39a4676c6692ce47935278dac76 # VFB
+                  - b6816a0e1d4b64bf3550ad3b74b009b6 # VFI
+                  - 7ae924ee9b2f39df3283c6c0beb8a2aa # VOF
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 5000
+            - trash_ids:
+                  - 82085412d9a53ba8d8e46fc624eb701d # VQ
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 2500
+            - trash_ids:
+                  - fr-french-generic # French Audio (generic)
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: 4800
             - trash_ids:
                   - fr-2160p-bonus
               assign_scores_to:

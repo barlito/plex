@@ -44,11 +44,11 @@ entre langues dépassent le score maximal d'un groupe de release française (195
 | Élément | `FR HD-UHD` | `FR Anime` |
 |---|---|---|
 | MULTi | 7500 | 20000 |
-| VFF / TRUEFRENCH | 5000 | -10000 |
-| VFQ | 2500 | -10000 |
+| VFF / TRUEFRENCH, VF2, VFI, VFB, VOF | 5000 | -10000 (VOF : 0) |
+| `FRENCH` seul (format local `French Audio (generic)`) | 4800 | -10000 |
+| VFQ, VQ | 2500 | -10000 |
 | VOSTFR | 0 | 500 |
 | VO seule | 0 | 0 |
-| Autres VF seules (VF2, VFB, VFI, VQ) | 0 | -10000 |
 | Bonus 2160p (format `2160p Bonus`) | 100 | 100 |
 | Groupes de release FR (tiers) | jusqu'à 1950 | jusqu'à 1650 |
 | `LQ`, `FR LQ`, `BR-DISK`, `Upscaled`, DV sans repli HDR10 | -10000 | -10000 |
@@ -60,8 +60,9 @@ entre langues dépassent le score maximal d'un groupe de release française (195
 - Entre deux releases de même langue, le bonus 4K fait préférer le 2160p.
 - Dans `FR Anime`, MULTi vaut 20000 car un titre « MULTi.VFF » porte aussi l'étiquette VFF
   (-10000) : il reste accepté, alors qu'une VF seule est rejetée.
-- Le bonus 4K est un format personnalisé local : `recyclarr/config/custom-formats/` (déclaré dans
-  `recyclarr/config/settings.yml`).
+- `MULTi.FRENCH` n'est pas compté comme `FRENCH` seul : il reste une release MULTi.
+- Les formats `2160p Bonus` et `French Audio (generic)` sont des formats personnalisés locaux, dans
+  `recyclarr/config/custom-formats/` (déclarés dans `recyclarr/config/settings.yml`).
 
 ## 2. Radarr et Sonarr : langues des indexeurs
 
