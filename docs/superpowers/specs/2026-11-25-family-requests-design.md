@@ -92,22 +92,26 @@ l'approbation à la taille.
 
 - Nouveau service `recyclarr` (image `ghcr.io/recyclarr/recyclarr`, tag épinglé), sans Traefik,
   sans montage de `./medias`. Synchronisation quotidienne via `CRON_SCHEDULE`.
-- Config versionnée `recyclarr/recyclarr.yml`, montée en bind. Clés API Radarr et Sonarr
-  injectées par variables d'environnement (`!env_var`), jamais versionnées.
-- Base : templates TRaSH Guides **French** (custom formats MULTi VFF/VFQ, VFF, VFQ, VOSTFR, etc.).
-  Ordre de score : MULTi > VFF/TRUEFRENCH > VFQ > reste. VOSTFR et VO seule ne sont pris
-  qu'en l'absence d'autre release.
-- Profil « FR HD-UHD » (Radarr et Sonarr) : qualités WEB et Bluray 1080p et 2160p, **2160p
-  préféré** quand elle passe sous le plafond, sinon 1080p.
+- Config versionnée dans `recyclarr/config/` (`recyclarr.yml`, `settings.yml`, formats locaux
+  dans `custom-formats/`), montée en bind. Clés API Radarr et Sonarr dans
+  `recyclarr/config/secrets.yml` (`!secret`), ignoré par git.
+- Base : custom formats TRaSH Guides **French**. Ordre : MULTi > VF (VFF, VF2, `FRENCH` seul)
+  > VFQ > VOSTFR/VO. VOSTFR et VO seule ne sont pris qu'en l'absence d'autre release.
+- Profil « FR HD-UHD » (Radarr et Sonarr) : WEB et Bluray 1080p et 2160p dans **un seul groupe
+  de qualité**. Radarr/Sonarr classent la qualité avant le score : avec la 2160p au-dessus du
+  1080p, une 4K VOSTFR battrait un 1080p MULTi. Dans un groupe unique, la langue décide ; un
+  petit bonus 4K départage deux releases de même langue.
 - Formats pénalisés ou interdits : Dolby Vision sans repli HDR10, remux, releases de mauvaise
   qualité (CF TRaSH « LQ »).
 - Plafonds via les *quality definitions* *(valeurs de départ choisies par Claude, à ajuster)* :
-  - 2160p : max ≈ 125 Mo/min (≈ 15 Go pour 2 h) ;
-  - 1080p : max ≈ 85 Mo/min (≈ 10 Go pour 2 h).
+  - 2160p : max 125 Mo/min (≈ 15 Go pour 2 h) ;
+  - 1080p : max 85 Mo/min (≈ 10 Go pour 2 h).
 - **Personne ne choisit 1080p ou 4K à la main** : à la première recherche, Radarr/Sonarr prend
-  la release la mieux classée disponible (2160p sous plafond > 1080p, puis score FR).
-  **Cutoff = 1080p** : une fois un fichier 1080p récupéré, pas de re-téléchargement plus tard
-  quand une 4K sort *(choix de Claude : évite la bande passante et le disque gaspillés)*.
+  la release au meilleur score (langue, puis bonus 4K, puis groupe de release).
+- Les scores de custom formats s'additionnent : MULTi est placé au-dessus de la pire somme de
+  tags VF. `until_score` = score MULTi : une fois un MULTi récupéré, plus de re-téléchargement
+  (pas de passage en 4K) ; les mises à niveau VOSTFR → VF → MULTi restent possibles
+  *(choix de Claude : évite la bande passante et le disque gaspillés)*.
 - Séries : la décision se fait par épisode ou par pack de saison, donc une saison peut mélanger
   1080p et 2160p. Les packs de saison sont préférés (comportement par défaut de Sonarr).
 - Animes (validé par Axel) : profil Sonarr dédié « FR Anime » : **MULTi ou VOSTFR, jamais de
@@ -127,15 +131,14 @@ l'approbation à la taille.
 
 1. **Phase 1, `feat/phase-1-seerr`** : service Seerr (compose, `make init`, `.gitkeep`, README),
    doc FR `docs/SEERR_SETUP.md` (réglages de la décision 1, permissions par utilisateur,
-   notification Discord). Vérif : `docker compose -f docker-compose.yml config` valide, puis
+   notification ntfy). Vérif : `docker compose -f docker-compose.yml config` valide, puis
    recette après deploy (connexion d'un compte Jellyfin de test, demande en attente pour un
    compte « parent », demande auto pour un compte « auto »).
-2. **Phase 2, `feat/phase-2-recyclarr-fr`** : service Recyclarr, `recyclarr/recyclarr.yml`,
-   doc des clés API, réglages Bazarr dans la doc. Vérif : `recyclarr sync --preview` sans
-   erreur, puis recherche manuelle d'un film connu dans Radarr (une release MULTi passe
-   devant une VOSTFR, une 4K au-dessus du plafond est rejetée).
+2. **Phase 2, `feat/phase-2-recyclarr-fr`** : service Recyclarr, config `recyclarr/config/`,
+   doc des clés API, réglages Bazarr dans la doc. Vérif : `recyclarr sync` contre des
+   Radarr/Sonarr jetables, puis assertions API et scores `/parse` sur des titres réels.
 
-Les actions manuelles (DNS, clés API dans `.env`, tracker dans Prowlarr, réglage Radarr/Sonarr
+Les actions manuelles (DNS, `recyclarr/config/secrets.yml`, tracker dans Prowlarr, réglage Radarr/Sonarr
 « Indexers → Multi Languages », topic ntfy) vont dans la section `## TODO` des PR.
 
 Après les deux phases (validé par Axel) :
