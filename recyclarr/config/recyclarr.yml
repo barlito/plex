@@ -1,7 +1,9 @@
 # yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
 #
-# MULTi/VF2 tags often sit next to a VFF/VFQ tag in the same release title, so
-# in FR Anime the MULTi score must outweigh the VF-only penalties.
+# Language CF scores add up when a title carries several tags (VFF.VFQ,
+# FRENCH.VFF, MULTi.VFF.VFQ...). MULTi is therefore set above the sum of every
+# VF score that can co-occur (FR HD-UHD) or VF penalty (FR Anime), and
+# until_score equals the MULTi score.
 
 radarr:
     movies:
@@ -12,14 +14,14 @@ radarr:
         quality_definition:
             type: movie
             qualities:
-                - { name: WEBDL-2160p, max: 125, preferred: 125 }
-                - { name: WEBRip-2160p, max: 125, preferred: 125 }
-                - { name: Bluray-2160p, max: 125, preferred: 125 }
-                - { name: HDTV-2160p, max: 125, preferred: 125 }
-                - { name: WEBDL-1080p, max: 85, preferred: 85 }
-                - { name: WEBRip-1080p, max: 85, preferred: 85 }
-                - { name: Bluray-1080p, max: 85, preferred: 85 }
-                - { name: HDTV-1080p, max: 85, preferred: 85 }
+                - { name: WEBDL-2160p, max: 125, preferred: 95 }
+                - { name: WEBRip-2160p, max: 125, preferred: 95 }
+                - { name: Bluray-2160p, max: 125, preferred: 110 }
+                - { name: HDTV-2160p, max: 125, preferred: 95 }
+                - { name: WEBDL-1080p, max: 85, preferred: 60 }
+                - { name: WEBRip-1080p, max: 85, preferred: 60 }
+                - { name: Bluray-1080p, max: 85, preferred: 60 }
+                - { name: HDTV-1080p, max: 85, preferred: 60 }
 
         quality_profiles:
             - name: FR HD-UHD
@@ -28,7 +30,7 @@ radarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 7500
+                  until_score: 40000
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
@@ -38,7 +40,7 @@ radarr:
                   - 4b900e171accbfb172729b63323ea8ca # MULTi
               assign_scores_to:
                   - name: FR HD-UHD
-                    score: 7500
+                    score: 40000
             - trash_ids:
                   - 404c08fd0bd67f39b4d8e5709319094e # VFF
               assign_scores_to:
@@ -100,14 +102,14 @@ sonarr:
         quality_definition:
             type: series
             qualities:
-                - { name: WEBDL-2160p, max: 125, preferred: 125 }
-                - { name: WEBRip-2160p, max: 125, preferred: 125 }
-                - { name: Bluray-2160p, max: 125, preferred: 125 }
-                - { name: HDTV-2160p, max: 125, preferred: 125 }
-                - { name: WEBDL-1080p, max: 85, preferred: 85 }
-                - { name: WEBRip-1080p, max: 85, preferred: 85 }
-                - { name: Bluray-1080p, max: 85, preferred: 85 }
-                - { name: HDTV-1080p, max: 85, preferred: 85 }
+                - { name: WEBDL-2160p, max: 125, preferred: 95 }
+                - { name: WEBRip-2160p, max: 125, preferred: 95 }
+                - { name: Bluray-2160p, max: 125, preferred: 95 }
+                - { name: HDTV-2160p, max: 125, preferred: 95 }
+                - { name: WEBDL-1080p, max: 85, preferred: 60 }
+                - { name: WEBRip-1080p, max: 85, preferred: 60 }
+                - { name: Bluray-1080p, max: 85, preferred: 60 }
+                - { name: HDTV-1080p, max: 85, preferred: 60 }
 
         quality_profiles:
             - name: FR HD-UHD
@@ -116,7 +118,7 @@ sonarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 7500
+                  until_score: 40000
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
@@ -126,7 +128,7 @@ sonarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 20000
+                  until_score: 80000
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
@@ -136,9 +138,9 @@ sonarr:
                   - 7ba05c6e0e14e793538174c679126996 # MULTi
               assign_scores_to:
                   - name: FR HD-UHD
-                    score: 7500
+                    score: 40000
                   - name: FR Anime
-                    score: 20000
+                    score: 80000
             - trash_ids:
                   - 2c29a39a4fdfd6d258799bc4c09731b9 # VFF
               assign_scores_to:

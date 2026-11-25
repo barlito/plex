@@ -16,7 +16,12 @@ restart:
 
 .PHONY: recyclarr-sync
 recyclarr-sync:
-	docker exec $$(docker ps -q -f name=$(stack_name)_recyclarr) recyclarr sync
+	@id=$$(docker ps -q -f name=$(stack_name)_recyclarr); \
+	if [ -z "$$id" ]; then \
+		echo "No local $(stack_name)_recyclarr container: run this on the node hosting the task" >&2; \
+		exit 1; \
+	fi; \
+	docker exec $$id recyclarr sync
 
 .PHONY: init
 init:

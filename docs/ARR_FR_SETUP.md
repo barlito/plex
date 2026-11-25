@@ -38,12 +38,14 @@ Les profils et custom formats créés à la main ne sont jamais supprimés ni mo
 (`delete_old_custom_formats: false`, seuls les profils nommés ci-dessus sont gérés).
 
 Radarr et Sonarr classent d'abord par qualité, puis par score. Pour que la langue passe avant la
-résolution, le 1080p et le 2160p sont dans le même groupe : c'est le score qui décide. Les écarts
-entre langues dépassent le score maximal d'un groupe de release française (1950) plus le bonus 4K.
+résolution, le 1080p et le 2160p sont dans le même groupe : c'est le score qui décide. Les scores de
+langue s'additionnent quand un titre porte plusieurs étiquettes (`VFF.VFQ`, `FRENCH.VFF`...).
+MULTi est donc placé au-dessus de la somme de tous les scores VF qui peuvent se cumuler, du plus
+grand groupe de release française (1950) et du bonus 4K.
 
 | Élément | `FR HD-UHD` | `FR Anime` |
 |---|---|---|
-| MULTi | 7500 | 20000 |
+| MULTi | 40000 | 80000 |
 | VFF / TRUEFRENCH, VF2, VFI, VFB, VOF | 5000 | -10000 (VOF : 0) |
 | `FRENCH` seul (format local `French Audio (generic)`) | 4800 | -10000 |
 | VFQ, VQ | 2500 | -10000 |
@@ -52,15 +54,23 @@ entre langues dépassent le score maximal d'un groupe de release française (195
 | Bonus 2160p (format `2160p Bonus`) | 100 | 100 |
 | Groupes de release FR (tiers) | jusqu'à 1950 | jusqu'à 1650 |
 | `LQ`, `FR LQ`, `BR-DISK`, `Upscaled`, DV sans repli HDR10 | -10000 | -10000 |
-| Règle de mise à niveau (`until_score`) | 7500 | 20000 |
+| Règle de mise à niveau (`until_score`) | 40000 | 80000 |
 
 - Une release MULTi atteint le score de coupure : plus aucun re-téléchargement ensuite, donc pas de
   passage en 4K après un fichier 1080p MULTi. Les mises à niveau VOSTFR, puis VF, puis MULTi restent
   possibles.
 - Entre deux releases de même langue, le bonus 4K fait préférer le 2160p.
-- Dans `FR Anime`, MULTi vaut 20000 car un titre « MULTi.VFF » porte aussi l'étiquette VFF
-  (-10000) : il reste accepté, alors qu'une VF seule est rejetée.
-- `MULTi.FRENCH` n'est pas compté comme `FRENCH` seul : il reste une release MULTi.
+- Dans `FR Anime`, chaque étiquette VF vaut -10000 et elles s'additionnent : MULTi (80000) dépasse
+  la somme de toutes les pénalités VF possibles plus le meilleur score VOSTFR, donc « MULTi.VFF.VFQ »
+  reste accepté et passe devant n'importe quel VOSTFR, alors qu'une VF seule est rejetée.
+- `FRENCH` seul (4800) et VFF (5000) sont quasi équivalents : un groupe de release (jusqu'à 1950)
+  peut les inverser. L'écart garanti de plus de 2050 ne vaut qu'entre les paliers MULTi, VF,
+  VFQ et VOSTFR/VO.
+- Un titre contenant MULTi n'est jamais compté comme `FRENCH` seul (`MULTi.FRENCH`, `MULTi-FRENCH`,
+  `FRENCH.MULTi`, `MULTi_FRENCH`).
+- Les tailles préférées (`preferred`) sont de 95 Mo/min en 2160p et 60 Mo/min en 1080p, sous les
+  plafonds : à qualité égale, Radarr et Sonarr ne choisissent pas systématiquement le plus gros
+  fichier.
 - Les formats `2160p Bonus` et `French Audio (generic)` sont des formats personnalisés locaux, dans
   `recyclarr/config/custom-formats/` (déclarés dans `recyclarr/config/settings.yml`).
 
