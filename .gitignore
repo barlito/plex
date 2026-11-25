@@ -9,9 +9,7 @@ filebrowser/*
 jellyfin/config/*
 !jellyfin/config/.gitkeep
 
-# On ignore les médias mais on garde l'arborescence : il faut re-autoriser les
-# dossiers eux-mêmes (`!.../*/`), sinon git ne descend jamais dedans et les
-# négations sur les .gitkeep sont sans effet.
+# Directories must be re-included (`!.../*/`) for the .gitkeep negations to apply.
 medias/complete/**
 medias/incoming/**
 medias/incomplete/**
