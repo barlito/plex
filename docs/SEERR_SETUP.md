@@ -49,12 +49,31 @@ Paramètres > Utilisateurs :
 - Importer les utilisateurs Jellyfin (parents, frère), puis activer à la main
   **Auto-Approve** (et Auto-Approve Films / Séries) pour Axel et le frère uniquement.
 
-## 5. Langue et région
+## 5. Sécurité (Seerr est exposé sans Authelia)
+
+Paramètres > Utilisateurs, **une fois les comptes de la famille importés** :
+
+- Désactiver **Enable New Jellyfin Sign-In**. Par défaut, n'importe quel compte Jellyfin peut
+  se connecter à Seerr : un compte est créé à la volée avec les permissions par défaut
+  (vérifié sur la v3.5). Après désactivation, seuls les comptes importés se connectent.
+
+Paramètres > Général :
+
+- Activer **Enable Proxy Support** : Seerr est derrière Traefik, sans ça il ne voit que l'IP
+  du proxy.
+- Activer **Enable CSRF Protection** (l'accès se fait toujours en HTTPS).
+
+Brute-force : un échec de connexion renvoie un `401` (vérifié sur la v3.5), donc la prison
+fail2ban `traefik-badbots` de traefik-base le compte (20 erreurs 4xx par minute). Jellyfin
+verrouille aussi un compte après plusieurs échecs (*Tableau de bord > Utilisateurs > profil >
+nombre maximal de tentatives*).
+
+## 6. Langue et région
 
 Paramètres > Général : langue d'affichage **Français**, région de découverte **FR**
 (et langue des originaux : toutes).
 
-## 6. Notifications ntfy (demandes en attente)
+## 7. Notifications ntfy (demandes en attente)
 
 L'image épinglée contient un agent **ntfy natif** (`lib/notifications/agents/ntfy`), il n'y a
 donc pas besoin de l'agent Webhook.
@@ -66,7 +85,7 @@ donc pas besoin de l'agent Webhook.
 4. Types de notification : cocher **uniquement** « Request Pending Approval ».
 5. Tester avec le bouton « Test », après s'être abonné au topic dans l'application ntfy du téléphone.
 
-## 7. Recette après déploiement
+## 8. Recette après déploiement
 
 - Connexion d'un compte Jellyfin de test : réussie, sans accès aux réglages.
 - Demande depuis un compte « parent » : reste en attente et déclenche une notification ntfy.
