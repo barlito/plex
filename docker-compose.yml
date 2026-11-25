@@ -254,7 +254,8 @@ services:
 
     # Recyclarr only talks to the Radarr/Sonarr APIs: no ingress, no media mount.
     # API keys come from recyclarr/config/secrets.yml (gitignored, see
-    # secrets.yml.example); the sync fails if the file is missing.
+    # secrets.yml.example); if it is missing the sync logs an [ERR] and syncs
+    # nothing, but the container does not exit non-zero.
     recyclarr:
         image: ghcr.io/recyclarr/recyclarr:8.8
         user: "1000:1000"

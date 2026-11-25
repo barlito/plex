@@ -31,15 +31,37 @@ Ce qui est créé :
 
 | Application | Profils | Notes |
 |---|---|---|
-| Radarr | `FR HD-UHD` | WEB et Bluray, 2160p préféré, cutoff 1080p, pas de remux |
+| Radarr | `FR HD-UHD` | WEB et Bluray, 1080p et 2160p dans un seul groupe de qualités, pas de remux |
 | Sonarr | `FR HD-UHD`, `FR Anime` | Mêmes qualités ; `FR Anime` rejette les releases en VF seule |
 
 Les profils et custom formats créés à la main ne sont jamais supprimés ni modifiés
 (`delete_old_custom_formats: false`, seuls les profils nommés ci-dessus sont gérés).
 
-Ordre des scores dans `FR HD-UHD` : MULTi (5000) > VFF/TRUEFRENCH (3000) > VFQ (2000) > VOSTFR et
-VO seule (0, acceptées en dernier recours). Les formats `LQ`, `FR LQ`, `BR-DISK`, `Upscaled` et
-Dolby Vision sans repli HDR10 valent -10000.
+Radarr et Sonarr classent d'abord par qualité, puis par score. Pour que la langue passe avant la
+résolution, le 1080p et le 2160p sont dans le même groupe : c'est le score qui décide. Les écarts
+entre langues dépassent le score maximal d'un groupe de release française (1950) plus le bonus 4K.
+
+| Élément | `FR HD-UHD` | `FR Anime` |
+|---|---|---|
+| MULTi | 7500 | 20000 |
+| VFF / TRUEFRENCH | 5000 | -10000 |
+| VFQ | 2500 | -10000 |
+| VOSTFR | 0 | 500 |
+| VO seule | 0 | 0 |
+| Autres VF seules (VF2, VFB, VFI, VQ) | 0 | -10000 |
+| Bonus 2160p (format `2160p Bonus`) | 100 | 100 |
+| Groupes de release FR (tiers) | jusqu'à 1950 | jusqu'à 1650 |
+| `LQ`, `FR LQ`, `BR-DISK`, `Upscaled`, DV sans repli HDR10 | -10000 | -10000 |
+| Règle de mise à niveau (`until_score`) | 7500 | 20000 |
+
+- Une release MULTi atteint le score de coupure : plus aucun re-téléchargement ensuite, donc pas de
+  passage en 4K après un fichier 1080p MULTi. Les mises à niveau VOSTFR, puis VF, puis MULTi restent
+  possibles.
+- Entre deux releases de même langue, le bonus 4K fait préférer le 2160p.
+- Dans `FR Anime`, MULTi vaut 20000 car un titre « MULTi.VFF » porte aussi l'étiquette VFF
+  (-10000) : il reste accepté, alors qu'une VF seule est rejetée.
+- Le bonus 4K est un format personnalisé local : `recyclarr/config/custom-formats/` (déclaré dans
+  `recyclarr/config/settings.yml`).
 
 ## 2. Radarr et Sonarr : langues des indexeurs
 
