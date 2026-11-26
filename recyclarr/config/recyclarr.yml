@@ -1,10 +1,10 @@
 # yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
 #
-# Language CF scores add up when a title carries several tags (VFF.VFQ,
-# FRENCH.VFF, MULTi.VFF.VFQ...). MULTi is therefore set above the sum of every
-# VF score that can co-occur (FR HD-UHD) or VF penalty (FR Anime).
-# until_score stops upgrades once a VF (FR HD-UHD, 4800 = plain FRENCH) or a
-# VOSTFR (FR Anime, 500) is on disk: MULTi is preferred at grab time only.
+# Language scores add up when a title stacks tags (MULTi.VFF.VFQ...), so MULTi
+# sits above any VF sum. FR HD-UHD: MULTi > VF > FRENCH > VOSTFR/VO, Quebec-only
+# dubs (VFQ, VQ, VFB) are banned. FR Anime: MULTi and VOSTFR score the same (VO Audio),
+# VF-only is rejected. until_score stops upgrades once a VF (FR HD-UHD) or any
+# acceptable VO (FR Anime) is on disk. Sonarr preferred == min: lightest wins at equal score.
 
 radarr:
     movies:
@@ -81,6 +81,11 @@ radarr:
               assign_scores_to:
                   - name: FR HD-UHD
                     score: 100
+            - trash_ids:
+                  - fr-non-fr-dub-only # Quebec/Belgian-only dub, even with MULTi
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: -50000
 
         custom_format_groups:
             add:
@@ -101,17 +106,18 @@ sonarr:
         api_key: !secret sonarr_api_key
         delete_old_custom_formats: false
 
+        # preferred == min: CompareSize picks the release closest to runtime * preferred.
         quality_definition:
             type: series
             qualities:
-                - { name: WEBDL-2160p, min: 15, max: 125, preferred: 95 }
-                - { name: WEBRip-2160p, min: 15, max: 125, preferred: 95 }
-                - { name: Bluray-2160p, min: 15, max: 125, preferred: 95 }
-                - { name: HDTV-2160p, min: 15, max: 125, preferred: 95 }
-                - { name: WEBDL-1080p, min: 5, max: 85, preferred: 60 }
-                - { name: WEBRip-1080p, min: 5, max: 85, preferred: 60 }
-                - { name: Bluray-1080p, min: 5, max: 85, preferred: 60 }
-                - { name: HDTV-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: WEBDL-2160p, min: 15, max: 125, preferred: 15 }
+                - { name: WEBRip-2160p, min: 15, max: 125, preferred: 15 }
+                - { name: Bluray-2160p, min: 15, max: 125, preferred: 15 }
+                - { name: HDTV-2160p, min: 15, max: 125, preferred: 15 }
+                - { name: WEBDL-1080p, min: 5, max: 85, preferred: 5 }
+                - { name: WEBRip-1080p, min: 5, max: 85, preferred: 5 }
+                - { name: Bluray-1080p, min: 5, max: 85, preferred: 5 }
+                - { name: HDTV-1080p, min: 5, max: 85, preferred: 5 }
 
         quality_profiles:
             - name: FR HD-UHD
@@ -130,7 +136,7 @@ sonarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 500
+                  until_score: 10000
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
@@ -141,8 +147,6 @@ sonarr:
               assign_scores_to:
                   - name: FR HD-UHD
                     score: 40000
-                  - name: FR Anime
-                    score: 80000
             - trash_ids:
                   - 2c29a39a4fdfd6d258799bc4c09731b9 # VFF
               assign_scores_to:
@@ -158,19 +162,21 @@ sonarr:
               assign_scores_to:
                   - name: FR HD-UHD
                     score: 0
-                  - name: FR Anime
-                    score: 500
             - trash_ids:
-                  - 2c29a39a4fdfd6d258799bc4c09731b9 # VFF
-                  - 7a7f4e4f58bd1058440236d033a90b67 # VFQ
-                  - 34789ec3caa819f087e23bbf9999daf7 # VF2
-                  - 0ce1e39a4676c6692ce47935278dac76 # VFB
-                  - b6816a0e1d4b64bf3550ad3b74b009b6 # VFI
-                  - 82085412d9a53ba8d8e46fc624eb701d # VQ
-                  - fr-french-generic # French Audio (generic)
+                  - fr-vo-audio # MULTi or French-subbed VO
+              assign_scores_to:
+                  - name: FR Anime
+                    score: 10000
+            - trash_ids:
+                  - fr-vf-only # French audio only (no MULTi, no subs)
               assign_scores_to:
                   - name: FR Anime
                     score: -10000
+            - trash_ids:
+                  - fr-non-fr-dub-only # Quebec/Belgian-only dub, even with MULTi
+              assign_scores_to:
+                  - name: FR HD-UHD
+                    score: -50000
             - trash_ids:
                   - 34789ec3caa819f087e23bbf9999daf7 # VF2
                   - 0ce1e39a4676c6692ce47935278dac76 # VFB
@@ -194,8 +200,6 @@ sonarr:
               assign_scores_to:
                   - name: FR HD-UHD
                     score: 100
-                  - name: FR Anime
-                    score: 100
 
         custom_format_groups:
             add:
@@ -207,10 +211,6 @@ sonarr:
                   select_all: true
                   assign_scores_to:
                       - name: FR HD-UHD
-                - trash_id: cb745c70bc9ea2ae49b72cfeed17cfd2 # [Release Groups] French Anime
-                  select_all: true
-                  assign_scores_to:
-                      - name: FR Anime
                 - trash_id: d776a1ea912a117d66d83b880ff2055d # [HDR Formats] DV (w/o HDR fallback)
                   assign_scores_to:
                       - name: FR HD-UHD
