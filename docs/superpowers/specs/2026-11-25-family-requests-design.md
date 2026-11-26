@@ -95,8 +95,11 @@ l'approbation à la taille.
 - Config versionnée dans `recyclarr/config/` (`recyclarr.yml`, `settings.yml`, formats locaux
   dans `custom-formats/`), montée en bind. Clés API Radarr et Sonarr dans
   `recyclarr/config/secrets.yml` (`!secret`), ignoré par git.
-- Base : custom formats TRaSH Guides **French**. Ordre : MULTi > VF (VFF, VF2, `FRENCH` seul)
-  > VFQ > VOSTFR/VO. VOSTFR et VO seule ne sont pris qu'en l'absence d'autre release.
+- Base : custom formats TRaSH Guides **French**. Ordre : MULTi > VF France (VFF/TRUEFRENCH, VF2,
+  VFI, `FRENCH` seul) > VOSTFR/VO. VOSTFR et VO seule ne sont pris qu'en l'absence d'autre release.
+- **Doublages québécois et belges bannis** (VFQ, VQ, VFB) quand le titre ne porte pas aussi une VF
+  France (VFF, TRUEFRENCH, VF2, VFI, VOF) : format local à -50000, `MULTi.VFQ` compris
+  *(choix d'Axel, PR #11)*.
 - Profil « FR HD-UHD » (Radarr et Sonarr) : WEB et Bluray 1080p et 2160p dans **un seul groupe
   de qualité**. Radarr/Sonarr classent la qualité avant le score : avec la 2160p au-dessus du
   1080p, une 4K VOSTFR battrait un 1080p MULTi. Dans un groupe unique, la langue décide ; un
@@ -109,13 +112,21 @@ l'approbation à la taille.
 - **Personne ne choisit 1080p ou 4K à la main** : à la première recherche, Radarr/Sonarr prend
   la release au meilleur score (langue, puis bonus 4K, puis groupe de release).
 - Les scores de custom formats s'additionnent : MULTi est placé au-dessus de la pire somme de
-  tags VF. `until_score` = score MULTi : une fois un MULTi récupéré, plus de re-téléchargement
-  (pas de passage en 4K) ; les mises à niveau VOSTFR → VF → MULTi restent possibles
-  *(choix de Claude : évite la bande passante et le disque gaspillés)*.
+  tags VF. **La VF suffit** : `until_score` = 4800 (score de `FRENCH` seul), donc dès qu'une VF est
+  récupérée, plus de re-téléchargement, ni vers la MULTi ni vers la 4K ; seule la mise à niveau
+  VOSTFR/VO → VF reste possible *(choix d'Axel, PR #10)*.
+- Tailles minimales basses (15 Mo/min en 2160p, 5 Mo/min en 1080p) pour accepter les encodes
+  « 4KLight » et « HDLight » *(PR #9)*. Dans Sonarr, la taille préférée vaut le minimum : à égalité
+  sur tout le reste (qualité, score, indexeur, seeders), la release la plus légère gagne
+  *(PR #11 ; Axel a refusé que la plus légère gagne contre une meilleure langue)*.
 - Séries : la décision se fait par épisode ou par pack de saison, donc une saison peut mélanger
   1080p et 2160p. Les packs de saison sont préférés (comportement par défaut de Sonarr).
 - Animes (validé par Axel) : profil Sonarr dédié « FR Anime » : **MULTi ou VOSTFR, jamais de
-  VF seule** (custom formats VF seule en score éliminatoire).
+  VF seule**. MULTi et VOSTFR valent le même score (format local `VO Audio`, 10000), la VF seule
+  vaut -10000 ; pas de tiers de groupes ni de bonus 4K, donc la plus légère départage ;
+  `until_score` = 10000 *(PR #11)*.
+- Seerr : métadonnées des séries et des animes sur TVDB, comme Sonarr, pour voir les saisons
+  annoncées (ex. FROM S05).
 
 ### 3. Sous-titres (Bazarr)
 

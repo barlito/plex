@@ -49,7 +49,7 @@ grand groupe de release française (1950) et du bonus 4K.
 | VFF / TRUEFRENCH, VF2, VFI, VFB, VOF | 5000 | 0 |
 | `FRENCH` seul (format local `French Audio (generic)`) | 4800 | 0 |
 | VFQ, VQ (formats TRaSH) | 2500 | 0 |
-| VFQ, VQ ou VFB sans VFF / TRUEFRENCH / VF2 (format local `Non-FR dub only (banned)`) | -50000 | non utilisé |
+| VFQ, VQ ou VFB sans VFF / TRUEFRENCH / VF2 / VFI / VOF (format local `Non-FR dub only (banned)`) | -50000 | non utilisé |
 | VOSTFR | 0 | 0 (compté dans `VO Audio`) |
 | `VO Audio` : MULTi ou VOSTFR / SUBFRENCH / STFR (format local) | non utilisé | 10000 |
 | `VF only` : VF seule, sans MULTi ni sous-titres FR (format local) | non utilisé | -10000 |
@@ -69,8 +69,9 @@ grand groupe de release française (1950) et du bonus 4K.
   c'est la taille qui départage (voir plus bas). Dès qu'un fichier à 10000 est récupéré, plus de
   re-téléchargement.
 - Les doublages québécois (VFQ, VQ) ou belges (VFB) seuls sont bannis dans `FR HD-UHD` (Radarr et Sonarr) : `Non-FR dub only (banned)` vaut -50000, ce qui rend `MULTi.VFQ` et `MULTi.VFB` (40000 + 2500 ou 5000 + groupes) négatifs, donc refusés. Un
-  titre qui porte aussi une VF France (VFF, TRUEFRENCH, VF2) n'est pas touché : `MULTi.VFF.VFQ`, `MULTi.VFF.VFB` et
-  `TRUEFRENCH.VFQ` restent acceptés, et `VF2` (qui regroupe les deux doublages) aussi.
+  titre qui porte aussi une VF France (VFF, TRUEFRENCH, VF2, VFI, VOF) n'est pas touché : `MULTi.VFF.VFQ`,
+  `MULTi.VFI.VFQ`, `MULTi.VFF.VFB` et `TRUEFRENCH.VFQ` restent acceptés, et `VF2` (qui regroupe les deux
+  doublages) aussi. `MULTi.FRENCH` seul n'est pas banni (souvent de la VFF en pratique).
 - `FRENCH` seul (4800) et VFF (5000) sont quasi équivalents : un groupe de release (jusqu'à 1950)
   peut les inverser. L'écart garanti de plus de 2050 ne vaut qu'entre les paliers MULTi, VF
   et VOSTFR/VO.

@@ -12,7 +12,10 @@ jellyfin/config/*
 # Directories must be re-included (`!.../*/`) for the .gitkeep negations to apply.
 medias/complete/**
 medias/incoming/**
+# Files seeded by the one-off cross-seed pass (2026-11): keep them, Transmission seeds from there.
 medias/cross-seed/**
+# Radarr/Sonarr recycle bin.
+medias/.recycle/
 medias/incomplete/**
 !medias/.gitkeep
 !medias/complete/.gitkeep
@@ -46,11 +49,6 @@ transmission/watch/*
 
 ubooquity/config/*
 !ubooquity/config/.gitkeep
-
-cross-seed/config/*
-!cross-seed/config/.gitkeep
-!cross-seed/config/config.js
-!cross-seed/config/secrets.env.example
 
 recyclarr/config/*
 !recyclarr/config/recyclarr.yml

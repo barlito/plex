@@ -10,7 +10,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-11-25-family-requests-design.md`
 
-> **Superseded during implementation (the spec is up to date, this plan is the original):** 1080p and 2160p ended up in a single quality group with a +100 `2160p Bonus` CF and `until_score` = MULTi score (quality ranks before CF score, so a separate 2160p tier let VOSTFR 4K beat MULTi 1080p); MULTi scores were raised (40000 / 80000) because CF scores add up across tags; a local `French Audio (generic)` CF covers plain `FRENCH`; Recyclarr 8.8 exits 0 when `secrets.yml` is missing (it logs `[ERR]` and syncs nothing).
+> **Superseded during implementation (the spec is up to date, this plan is the original):** 1080p and 2160p ended up in a single quality group with a +100 `2160p Bonus` CF and `until_score` = MULTi score (later lowered to the VF score, see the spec) (quality ranks before CF score, so a separate 2160p tier let VOSTFR 4K beat MULTi 1080p); MULTi scores were raised (40000) because CF scores add up across tags; a local `French Audio (generic)` CF covers plain `FRENCH`; Recyclarr 8.8 exits 0 when `secrets.yml` is missing (it logs `[ERR]` and syncs nothing).
 
 ## Global Constraints
 

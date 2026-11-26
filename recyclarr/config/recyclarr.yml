@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://schemas.recyclarr.dev/v8/config-schema.json
 #
 # Language scores add up when a title stacks tags (MULTi.VFF.VFQ...), so MULTi
-# sits above any VF sum. FR HD-UHD: MULTi > VF > FRENCH > VOSTFR/VO, Quebec-only
-# dubs (VFQ, VQ, VFB) are banned. FR Anime: MULTi and VOSTFR score the same (VO Audio),
+# sits above any VF sum. FR HD-UHD: MULTi > VF > FRENCH > VOSTFR/VO, Quebec or Belgian
+# dubs (VFQ, VQ, VFB) without a France-French tag are banned. FR Anime: MULTi and VOSTFR score the same (VO Audio),
 # VF-only is rejected. until_score stops upgrades once a VF (FR HD-UHD) or any
 # acceptable VO (FR Anime) is on disk. Sonarr preferred == min: lightest wins at equal score.
 
