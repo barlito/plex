@@ -23,10 +23,20 @@ recyclarr-sync:
 	fi; \
 	docker exec $$id recyclarr sync
 
+.PHONY: cross-seed-search
+cross-seed-search:
+	@id=$$(docker ps -q -f name=$(stack_name)_cross-seed); \
+	if [ -z "$$id" ]; then \
+		echo "No local $(stack_name)_cross-seed container: run this on the node hosting the task" >&2; \
+		exit 1; \
+	fi; \
+	docker exec $$id sh -c 'curl -fsS -XPOST "http://localhost:2468/api/job?apikey=$$CROSS_SEED_API_KEY" -d name=search -d ignoreExcludeRecentSearch=true -d ignoreExcludeOlder=true'
+
 .PHONY: init
 init:
 	@echo "Creating directory structure..."
 	@mkdir -p medias/incoming
+	@mkdir -p medias/cross-seed
 	@mkdir -p medias/incomplete
 	@mkdir -p medias/complete/Films
 	@mkdir -p medias/complete/SeriesTV
@@ -46,6 +56,8 @@ init:
 	@mkdir -p transmission/watch
 	@mkdir -p ubooquity/config
 	@mkdir -p recyclarr/config
+	@mkdir -p cross-seed/config
+	@[ -f cross-seed/config/secrets.env ] || touch cross-seed/config/secrets.env
 	@touch filebrowser/database.db
 	@echo "✓ Directory structure ready for production!"
 

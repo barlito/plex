@@ -12,6 +12,7 @@ jellyfin/config/*
 # Directories must be re-included (`!.../*/`) for the .gitkeep negations to apply.
 medias/complete/**
 medias/incoming/**
+medias/cross-seed/**
 medias/incomplete/**
 !medias/.gitkeep
 !medias/complete/.gitkeep
@@ -45,6 +46,11 @@ transmission/watch/*
 
 ubooquity/config/*
 !ubooquity/config/.gitkeep
+
+cross-seed/config/*
+!cross-seed/config/.gitkeep
+!cross-seed/config/config.js
+!cross-seed/config/secrets.env.example
 
 recyclarr/config/*
 !recyclarr/config/recyclarr.yml
