@@ -32,7 +32,7 @@ Ce qui est créé :
 | Application | Profils | Notes |
 |---|---|---|
 | Radarr | `FR HD-UHD` | WEB et Bluray, 1080p et 2160p dans un seul groupe de qualités, pas de remux |
-| Sonarr | `FR HD-UHD`, `FR Anime` | Mêmes qualités ; `FR Anime` rejette les releases en VF seule |
+| Sonarr | `FR HD-UHD`, `FR Anime` | Mêmes qualités ; `FR Anime` met MULTi et VOSTFR au même score et rejette les releases en VF seule |
 
 Les profils et custom formats créés à la main ne sont jamais supprimés ni modifiés
 (`delete_old_custom_formats: false`, seuls les profils nommés ci-dessus sont gérés).
@@ -45,35 +45,45 @@ grand groupe de release française (1950) et du bonus 4K.
 
 | Élément | `FR HD-UHD` | `FR Anime` |
 |---|---|---|
-| MULTi | 40000 | 80000 |
-| VFF / TRUEFRENCH, VF2, VFI, VFB, VOF | 5000 | -10000 (VOF : 0) |
-| `FRENCH` seul (format local `French Audio (generic)`) | 4800 | -10000 |
-| VFQ, VQ | 2500 | -10000 |
-| VOSTFR | 0 | 500 |
+| MULTi | 40000 | 0 (compté dans `VO Audio`) |
+| VFF / TRUEFRENCH, VF2, VFI, VFB, VOF | 5000 | 0 |
+| `FRENCH` seul (format local `French Audio (generic)`) | 4800 | 0 |
+| VFQ, VQ (formats TRaSH) | 2500 | 0 |
+| VFQ, VQ ou VFB sans VFF / TRUEFRENCH / VF2 (format local `Non-FR dub only (banned)`) | -50000 | non utilisé |
+| VOSTFR | 0 | 0 (compté dans `VO Audio`) |
+| `VO Audio` : MULTi ou VOSTFR / SUBFRENCH / STFR (format local) | non utilisé | 10000 |
+| `VF only` : VF seule, sans MULTi ni sous-titres FR (format local) | non utilisé | -10000 |
 | VO seule | 0 | 0 |
-| Bonus 2160p (format `2160p Bonus`) | 100 | 100 |
-| Groupes de release FR (tiers) | jusqu'à 1950 | jusqu'à 1650 |
+| Bonus 2160p (format `2160p Bonus`) | 100 | 0 |
+| Groupes de release FR (tiers) | jusqu'à 1950 | non utilisés |
 | `LQ`, `FR LQ`, `BR-DISK`, `Upscaled`, DV sans repli HDR10 | -10000 | -10000 |
-| Règle de mise à niveau (`until_score`) | 4800 | 500 |
+| Règle de mise à niveau (`until_score`) | 4800 | 10000 |
 
 - La VF suffit : à la recherche, une MULTi passe devant une VF, mais dès qu'un fichier en VF
   (VFF, VF2, TRUEFRENCH, `FRENCH` seul) est récupéré, plus aucun re-téléchargement (ni vers la MULTi,
-  ni vers la 4K). Une VFQ ou une VOSTFR peut encore être remplacée par une VF.
-- Animes : la VO est voulue. Dès qu'une VOSTFR ou une MULTi est récupérée, plus de re-téléchargement.
-- Entre deux releases de même langue, le bonus 4K fait préférer le 2160p.
-- Dans `FR Anime`, chaque étiquette VF vaut -10000 et elles s'additionnent : MULTi (80000) dépasse
-  la somme de toutes les pénalités VF possibles plus le meilleur score VOSTFR, donc « MULTi.VFF.VFQ »
-  reste accepté et passe devant n'importe quel VOSTFR, alors qu'une VF seule est rejetée.
+  ni vers la 4K). Une VOSTFR ou une VO peut encore être remplacée par une VF.
+- Animes : la VO est voulue, et MULTi vaut exactement VOSTFR. Un seul format (`VO Audio`) porte les
+  10000 points, donc le score ne dépend pas des étiquettes qu'un titre cumule (`MULTi.VFF.VFQ` =
+  `MULTi` = `VOSTFR` = `SUBFRENCH` = 10000). Une VF seule (`VFF`, `VFQ`, `TRUEFRENCH`, `FRENCH`...)
+  vaut -10000 et est rejetée. Le bonus 4K et les groupes de release ne sont pas notés : à score égal,
+  c'est la taille qui départage (voir plus bas). Dès qu'un fichier à 10000 est récupéré, plus de
+  re-téléchargement.
+- Les doublages québécois (VFQ, VQ) ou belges (VFB) seuls sont bannis dans `FR HD-UHD` (Radarr et Sonarr) : `Non-FR dub only (banned)` vaut -50000, ce qui rend `MULTi.VFQ` et `MULTi.VFB` (40000 + 2500 ou 5000 + groupes) négatifs, donc refusés. Un
+  titre qui porte aussi une VF France (VFF, TRUEFRENCH, VF2) n'est pas touché : `MULTi.VFF.VFQ`, `MULTi.VFF.VFB` et
+  `TRUEFRENCH.VFQ` restent acceptés, et `VF2` (qui regroupe les deux doublages) aussi.
 - `FRENCH` seul (4800) et VFF (5000) sont quasi équivalents : un groupe de release (jusqu'à 1950)
-  peut les inverser. L'écart garanti de plus de 2050 ne vaut qu'entre les paliers MULTi, VF,
-  VFQ et VOSTFR/VO.
+  peut les inverser. L'écart garanti de plus de 2050 ne vaut qu'entre les paliers MULTi, VF
+  et VOSTFR/VO.
 - Un titre contenant MULTi n'est jamais compté comme `FRENCH` seul (`MULTi.FRENCH`, `MULTi-FRENCH`,
   `FRENCH.MULTi`, `MULTi_FRENCH`).
 - Les tailles minimales sont volontairement basses (15 Mo/min en 2160p, 5 Mo/min en 1080p) : les minimums des guides TRaSH rejetaient les encodes « 4KLight » et « HDLight ».
-- Les tailles préférées (`preferred`) sont de 95 Mo/min en 2160p et 60 Mo/min en 1080p, sous les
-  plafonds : à qualité égale, Radarr et Sonarr ne choisissent pas systématiquement le plus gros
-  fichier.
-- Les formats `2160p Bonus` et `French Audio (generic)` sont des formats personnalisés locaux, dans
+- Tailles préférées (`preferred`) : dans Radarr, 95 Mo/min en 2160p et 60 Mo/min en 1080p, sous les
+  plafonds. Dans Sonarr, elles sont égales aux minimums (15 et 5 Mo/min). Sonarr choisit la release
+  la plus proche de `durée × preferred` (`CompareSize` dans `DownloadDecisionComparer.cs`) : avec un
+  `preferred` bas, la plus légère gagne. Cette comparaison passe en dernier, après la qualité, le
+  score, le protocole, l'indexeur et les pairs, et arrondit à 200 Mo : elle ne départage que les
+  releases à égalité sur tout le reste.
+- Les formats `2160p Bonus`, `French Audio (generic)`, `Non-FR dub only (banned)`, `VO Audio` et `VF only` sont des formats personnalisés locaux, dans
   `recyclarr/config/custom-formats/` (déclarés dans `recyclarr/config/settings.yml`).
 
 ## 2. Radarr et Sonarr : langues des indexeurs

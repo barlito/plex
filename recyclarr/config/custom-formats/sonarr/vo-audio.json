@@ -1,0 +1,25 @@
+{
+    "trash_id": "fr-vo-audio",
+    "name": "VO Audio",
+    "includeCustomFormatWhenRenaming": false,
+    "specifications": [
+        {
+            "name": "MULTi",
+            "implementation": "ReleaseTitleSpecification",
+            "negate": false,
+            "required": false,
+            "fields": {
+                "value": "\\bMULTi(?![ ._-]?sub(s)?)(\\b|\\d)"
+            }
+        },
+        {
+            "name": "French subs (VOSTFR, SUBFRENCH, STFR)",
+            "implementation": "ReleaseTitleSpecification",
+            "negate": false,
+            "required": false,
+            "fields": {
+                "value": "\\b(VOST[ .]?FR(E|A)?|STFR|SUBFR(A|ENCH)?|(SUB|ST)[ .]?FRENCH|FRENCH[ .]?SUBS?)\\b"
+            }
+        }
+    ]
+}
