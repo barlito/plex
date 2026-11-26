@@ -54,11 +54,12 @@ grand groupe de release française (1950) et du bonus 4K.
 | Bonus 2160p (format `2160p Bonus`) | 100 | 100 |
 | Groupes de release FR (tiers) | jusqu'à 1950 | jusqu'à 1650 |
 | `LQ`, `FR LQ`, `BR-DISK`, `Upscaled`, DV sans repli HDR10 | -10000 | -10000 |
-| Règle de mise à niveau (`until_score`) | 40000 | 80000 |
+| Règle de mise à niveau (`until_score`) | 4800 | 500 |
 
-- Une release MULTi atteint le score de coupure : plus aucun re-téléchargement ensuite, donc pas de
-  passage en 4K après un fichier 1080p MULTi. Les mises à niveau VOSTFR, puis VF, puis MULTi restent
-  possibles.
+- La VF suffit : à la recherche, une MULTi passe devant une VF, mais dès qu'un fichier en VF
+  (VFF, VF2, TRUEFRENCH, `FRENCH` seul) est récupéré, plus aucun re-téléchargement (ni vers la MULTi,
+  ni vers la 4K). Une VFQ ou une VOSTFR peut encore être remplacée par une VF.
+- Animes : la VO est voulue. Dès qu'une VOSTFR ou une MULTi est récupérée, plus de re-téléchargement.
 - Entre deux releases de même langue, le bonus 4K fait préférer le 2160p.
 - Dans `FR Anime`, chaque étiquette VF vaut -10000 et elles s'additionnent : MULTi (80000) dépasse
   la somme de toutes les pénalités VF possibles plus le meilleur score VOSTFR, donc « MULTi.VFF.VFQ »
