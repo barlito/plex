@@ -2,8 +2,9 @@
 #
 # Language CF scores add up when a title carries several tags (VFF.VFQ,
 # FRENCH.VFF, MULTi.VFF.VFQ...). MULTi is therefore set above the sum of every
-# VF score that can co-occur (FR HD-UHD) or VF penalty (FR Anime), and
-# until_score equals the MULTi score.
+# VF score that can co-occur (FR HD-UHD) or VF penalty (FR Anime).
+# until_score stops upgrades once a VF (FR HD-UHD, 4800 = plain FRENCH) or a
+# VOSTFR (FR Anime, 500) is on disk: MULTi is preferred at grab time only.
 
 radarr:
     movies:
@@ -31,7 +32,7 @@ radarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 40000
+                  until_score: 4800
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
@@ -119,7 +120,7 @@ sonarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 40000
+                  until_score: 4800
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
@@ -129,7 +130,7 @@ sonarr:
               upgrade:
                   allowed: true
                   until_quality: Bluray|WEB 1080p-2160p
-                  until_score: 80000
+                  until_score: 500
               qualities:
                   - name: Bluray|WEB 1080p-2160p
                     qualities: [Bluray-2160p, WEBRip-2160p, WEBDL-2160p, Bluray-1080p, WEBRip-1080p, WEBDL-1080p]
