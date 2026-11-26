@@ -17,12 +17,13 @@ Self-hosted media server stack running on Docker Swarm behind Traefik.
 | **FileBrowser** | `filebrowser.barlito.fr` | Web file manager over the media library (behind Authelia) |
 | **Seerr** | `demandes.barlito.fr` | Request portal for the family (Jellyfin login, not behind Authelia: apply the hardening in [docs/SEERR_SETUP.md](docs/SEERR_SETUP.md)) |
 | **Recyclarr** | none | Daily sync of FR-first quality profiles, custom formats and size caps into Radarr/Sonarr (no ingress; needs `recyclarr/config/secrets.yml`, see `docs/ARR_FR_SETUP.md`) |
-| **cross-seed** | none | One-shot pass that finds torrents on a private tracker matching the files left in `medias/incoming` and injects them into Transmission (no ingress; opt-in: off by default, run with `CROSS_SEED_REPLICAS=1 make deploy` after filling `cross-seed/config/secrets.env`, see [docs/CROSS_SEED.md](docs/CROSS_SEED.md)) |
 | **Ubooquity** | `ubooquity.barlito.fr` | Books & comics server (admin UI on `admin.ubooquity.barlito.fr`) |
 
-All media lives under `./medias`, mounted on `/downloads` in every service so Radarr/Sonarr import downloads as hardlinks. Transmission must download into `/downloads/incoming`: see [docs/TRANSMISSION_SETUP.md](docs/TRANSMISSION_SETUP.md).
+All media lives under `./medias`, mounted on `/downloads` in Transmission, Radarr, Sonarr, Bazarr, Jellyfin and Emby so Radarr/Sonarr import downloads as hardlinks (Plex mounts it on `/data`). Transmission must download into `/downloads/incoming`: see [docs/TRANSMISSION_SETUP.md](docs/TRANSMISSION_SETUP.md).
 
-The server has no GPU: `/dev/dri` is mounted in Jellyfin/Emby but every transcode runs on the CPU.
+The server has no GPU, so every transcode would run on the CPU: transcoding is disabled per user in Jellyfin.
+
+`medias/cross-seed/` holds torrents re-seeded by a one-off cross-seed pass (2026-11). Transmission seeds them from there: do not delete it.
 
 ## Prerequisites
 
@@ -43,5 +44,4 @@ make deploy      # Deploy the stack
 make undeploy    # Remove the stack
 make restart     # Undeploy then deploy
 make recyclarr-sync  # Sync FR profiles to Radarr/Sonarr now (on the node running recyclarr)
-make cross-seed-search  # Trigger a full cross-seed search now (on the node running cross-seed)
 ```

@@ -1,6 +1,6 @@
 services:
     filebrowser:
-        image: filebrowser/filebrowser
+        image: filebrowser/filebrowser:v2.63.23
         environment:
             - PUID=1000
             - PGID=1000
@@ -25,7 +25,7 @@ services:
     # download-dir must be /downloads/incoming, never Radarr's root folder. It is
     # only settable in transmission/config/settings.json: see docs/TRANSMISSION_SETUP.md.
     transmission:
-        image: lscr.io/linuxserver/transmission:latest
+        image: lscr.io/linuxserver/transmission:4.1.4
         environment:
             - PUID=1000
             - PGID=1000
@@ -50,7 +50,7 @@ services:
             - traefik_traefik_proxy
 
     plex:
-        image: lscr.io/linuxserver/plex:latest
+        image: lscr.io/linuxserver/plex:1.43.5
         hostname: KS-6 Plex New
         ports:
             - "32400:32400/tcp"
@@ -66,7 +66,7 @@ services:
             - traefik_traefik_proxy
 
     ubooquity:
-        image: lscr.io/linuxserver/ubooquity:latest
+        image: lscr.io/linuxserver/ubooquity:3.1.0
         environment:
             - PUID=1000
             - PGID=1000
@@ -98,7 +98,7 @@ services:
 
     # Same /downloads mount as Transmission so imports are hardlinks.
     radarr:
-        image: lscr.io/linuxserver/radarr:latest
+        image: lscr.io/linuxserver/radarr:7.0.3
         environment:
             - PUID=1000
             - PGID=1000
@@ -121,7 +121,7 @@ services:
             - traefik_traefik_proxy
 
     sonarr:
-        image: lscr.io/linuxserver/sonarr:latest
+        image: lscr.io/linuxserver/sonarr:4.0.20
         environment:
             - PUID=1000
             - PGID=1000
@@ -144,7 +144,7 @@ services:
             - traefik_traefik_proxy
 
     prowlarr:
-        image: lscr.io/linuxserver/prowlarr:latest
+        image: lscr.io/linuxserver/prowlarr:3.1.0
         environment:
             - PUID=1000
             - PGID=1000
@@ -167,7 +167,7 @@ services:
 
     # Must see the library at the same paths as Radarr/Sonarr.
     bazarr:
-        image: lscr.io/linuxserver/bazarr:latest
+        image: lscr.io/linuxserver/bazarr:1.6.2
         environment:
             - PUID=1000
             - PGID=1000
@@ -210,7 +210,7 @@ services:
             - traefik_traefik_proxy
 
     emby:
-        image: lscr.io/linuxserver/emby:latest
+        image: lscr.io/linuxserver/emby:4.10.2
         environment:
             - PUID=1000
             - PGID=1000
@@ -218,8 +218,6 @@ services:
         volumes:
             - ./emby/config:/config
             - ./medias:/downloads
-        devices:
-            - /dev/dri:/dev/dri
         deploy:
             labels:
                 - traefik.enable=true
@@ -234,7 +232,7 @@ services:
             - traefik_traefik_proxy
 
     jellyfin:
-        image: lscr.io/linuxserver/jellyfin:latest
+        image: lscr.io/linuxserver/jellyfin:version-12.4ubu2604
         environment:
             - PUID=1000
             - PGID=1000
@@ -243,8 +241,6 @@ services:
         volumes:
             - ./jellyfin/config:/config
             - ./medias:/downloads
-        devices:
-            - /dev/dri:/dev/dri
         deploy:
             labels:
                 - traefik.enable=true
@@ -270,26 +266,6 @@ services:
             - CRON_SCHEDULE=@daily
         volumes:
             - ./recyclarr/config:/config
-        networks:
-            - traefik_traefik_proxy
-
-    # One-shot cross-seeding of the files left in /downloads/incoming: see
-    # docs/CROSS_SEED.md. Opt-in: off unless deployed with CROSS_SEED_REPLICAS=1.
-    # Secrets come from cross-seed/config/secrets.env (gitignored, created empty
-    # by make init so env_file always exists).
-    cross-seed:
-        image: ghcr.io/cross-seed/cross-seed:6.13
-        user: "1000:1000"
-        command: daemon
-        env_file:
-            - ./cross-seed/config/secrets.env
-        environment:
-            - TZ=Europe/Paris
-        volumes:
-            - ./cross-seed/config:/config
-            - ./medias:/downloads
-        deploy:
-            replicas: ${CROSS_SEED_REPLICAS:-0}
         networks:
             - traefik_traefik_proxy
 
