@@ -11,17 +11,18 @@ radarr:
         api_key: !secret radarr_api_key
         delete_old_custom_formats: false
 
+        # Low minimums on purpose: "4KLight"/"HDLight" encodes fall below the guide's minimums.
         quality_definition:
             type: movie
             qualities:
-                - { name: WEBDL-2160p, max: 125, preferred: 95 }
-                - { name: WEBRip-2160p, max: 125, preferred: 95 }
-                - { name: Bluray-2160p, max: 125, preferred: 110 }
-                - { name: HDTV-2160p, max: 125, preferred: 95 }
-                - { name: WEBDL-1080p, max: 85, preferred: 60 }
-                - { name: WEBRip-1080p, max: 85, preferred: 60 }
-                - { name: Bluray-1080p, max: 85, preferred: 60 }
-                - { name: HDTV-1080p, max: 85, preferred: 60 }
+                - { name: WEBDL-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: WEBRip-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: Bluray-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: HDTV-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: WEBDL-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: WEBRip-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: Bluray-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: HDTV-1080p, min: 5, max: 85, preferred: 60 }
 
         quality_profiles:
             - name: FR HD-UHD
@@ -102,14 +103,14 @@ sonarr:
         quality_definition:
             type: series
             qualities:
-                - { name: WEBDL-2160p, max: 125, preferred: 95 }
-                - { name: WEBRip-2160p, max: 125, preferred: 95 }
-                - { name: Bluray-2160p, max: 125, preferred: 95 }
-                - { name: HDTV-2160p, max: 125, preferred: 95 }
-                - { name: WEBDL-1080p, max: 85, preferred: 60 }
-                - { name: WEBRip-1080p, max: 85, preferred: 60 }
-                - { name: Bluray-1080p, max: 85, preferred: 60 }
-                - { name: HDTV-1080p, max: 85, preferred: 60 }
+                - { name: WEBDL-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: WEBRip-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: Bluray-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: HDTV-2160p, min: 15, max: 125, preferred: 95 }
+                - { name: WEBDL-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: WEBRip-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: Bluray-1080p, min: 5, max: 85, preferred: 60 }
+                - { name: HDTV-1080p, min: 5, max: 85, preferred: 60 }
 
         quality_profiles:
             - name: FR HD-UHD
