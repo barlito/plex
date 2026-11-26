@@ -273,6 +273,25 @@ services:
         networks:
             - traefik_traefik_proxy
 
+    # One-shot cross-seeding of the files left in /downloads/incoming: see
+    # docs/CROSS_SEED.md. Secrets come from cross-seed/config/secrets.env
+    # (gitignored). Disable after the pass with CROSS_SEED_REPLICAS=0 make deploy.
+    cross-seed:
+        image: ghcr.io/cross-seed/cross-seed:6.13
+        user: "1000:1000"
+        command: daemon
+        env_file:
+            - ./cross-seed/config/secrets.env
+        environment:
+            - TZ=Europe/Paris
+        volumes:
+            - ./cross-seed/config:/config
+            - ./medias:/downloads
+        deploy:
+            replicas: ${CROSS_SEED_REPLICAS:-1}
+        networks:
+            - traefik_traefik_proxy
+
 networks:
     traefik_traefik_proxy:
         external: true
