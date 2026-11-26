@@ -17,7 +17,7 @@ Self-hosted media server stack running on Docker Swarm behind Traefik.
 | **FileBrowser** | `filebrowser.barlito.fr` | Web file manager over the media library (behind Authelia) |
 | **Seerr** | `demandes.barlito.fr` | Request portal for the family (Jellyfin login, not behind Authelia: apply the hardening in [docs/SEERR_SETUP.md](docs/SEERR_SETUP.md)) |
 | **Recyclarr** | none | Daily sync of FR-first quality profiles, custom formats and size caps into Radarr/Sonarr (no ingress; needs `recyclarr/config/secrets.yml`, see `docs/ARR_FR_SETUP.md`) |
-| **cross-seed** | none | One-shot pass that finds torrents on a private tracker matching the files left in `medias/incoming` and injects them into Transmission (no ingress; needs `cross-seed/config/secrets.env`, see [docs/CROSS_SEED.md](docs/CROSS_SEED.md)) |
+| **cross-seed** | none | One-shot pass that finds torrents on a private tracker matching the files left in `medias/incoming` and injects them into Transmission (no ingress; opt-in: off by default, run with `CROSS_SEED_REPLICAS=1 make deploy` after filling `cross-seed/config/secrets.env`, see [docs/CROSS_SEED.md](docs/CROSS_SEED.md)) |
 | **Ubooquity** | `ubooquity.barlito.fr` | Books & comics server (admin UI on `admin.ubooquity.barlito.fr`) |
 
 All media lives under `./medias`, mounted on `/downloads` in every service so Radarr/Sonarr import downloads as hardlinks. Transmission must download into `/downloads/incoming`: see [docs/TRANSMISSION_SETUP.md](docs/TRANSMISSION_SETUP.md).

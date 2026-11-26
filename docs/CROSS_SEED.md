@@ -36,8 +36,8 @@ Le dossier de liens ne peut pas être dans `incoming` (cross-seed le refuse : un
    ```bash
    cp cross-seed/config/secrets.env.example cross-seed/config/secrets.env
    ```
-   puis renseigner `CROSS_SEED_PROWLARR_API_KEY` (Prowlarr, Settings, General, API Key) et `CROSS_SEED_PROWLARR_INDEXER_IDS` (ids séparés par des virgules). `CROSS_SEED_API_KEY` est optionnelle (24 caractères minimum). `secrets.env` est ignoré par git ; sans lui, le déploiement échoue.
-5. Déployer : `make deploy`.
+   puis renseigner `CROSS_SEED_PROWLARR_API_KEY` (Prowlarr, Settings, General, API Key) et `CROSS_SEED_PROWLARR_INDEXER_IDS` (ids séparés par des virgules). `CROSS_SEED_API_KEY` est optionnelle (24 caractères minimum). `secrets.env` est ignoré par git ; `make init` en crée un vide s'il manque, pour que `make deploy` ne casse jamais. Vide, cross-seed refuse de démarrer.
+5. Lancer la passe (le service est désactivé par défaut) : `CROSS_SEED_REPLICAS=1 make deploy`.
 
 Les secrets ne sont jamais dans git : `config.js` les lit via `process.env`, alimenté par `env_file` dans `docker-compose.yml`.
 
@@ -59,13 +59,13 @@ Si cross-seed répond 409, une recherche est déjà en cours ou trop récente. N
 
 ## Désactiver après la passe
 
-Quand les logs montrent que la recherche est terminée (plus de nouvelles lignes de recherche), arrêter le service sans toucher au compose :
+Quand les logs montrent que la recherche est terminée (plus de nouvelles lignes de recherche), arrêter le service en redéployant normalement, sans la variable :
 
 ```bash
-CROSS_SEED_REPLICAS=0 make deploy
+make deploy
 ```
 
-Ou, à chaud : `docker service scale plex_cross-seed=0` (le prochain `make deploy` le remet à 1 sauf si la variable est à 0). Les torrents injectés restent dans Transmission et continuent de seeder ; les hardlinks dans `medias/cross-seed` doivent rester en place. Pour réactiver : `make deploy` sans la variable.
+Ou, à chaud : `docker service scale plex_cross-seed=0`. Les torrents injectés restent dans Transmission et continuent de seeder ; les hardlinks dans `medias/cross-seed` doivent rester en place. Pour refaire une passe : `CROSS_SEED_REPLICAS=1 make deploy`.
 
 ## Points d'attention
 

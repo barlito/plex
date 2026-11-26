@@ -57,6 +57,7 @@ init:
 	@mkdir -p ubooquity/config
 	@mkdir -p recyclarr/config
 	@mkdir -p cross-seed/config
+	@[ -f cross-seed/config/secrets.env ] || touch cross-seed/config/secrets.env
 	@touch filebrowser/database.db
 	@echo "✓ Directory structure ready for production!"
 
